@@ -1,0 +1,1368 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mobile viewport: prevent iOS text size adjustment, ensure proper scaling */
+/* Use dvh (dynamic viewport) so height matches Safari when address bar shows/hides */
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  min-height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Safe area: content stays within usable area (notch, home indicator) */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#root {
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /**
+   * Design system: controls and surfaces (use vars from :root / .dark)
+   * Tokens: --surface-bg, --surface-bg-hover, --dialog-bg, --control-hover,
+   * --control-active-bg, --control-divider, --nav-item-active-bg,
+   * --scrollbar-track, --scrollbar-track-hover, --slider-track
+   * Classes: .elevated-surface-shadow, .control-hover, .control-active
+   * Elements: toolbar-btn, toolbar-btn-group, toolbar-input, settings-dialog, etc.
+   */
+
+  /* Shared elevated surface shadow */
+  .elevated-surface-shadow {
+    box-shadow: var(--elevated-shadow);
+  }
+
+  /* Shared control states (hover, active) - use with nav items, tabs, list items */
+  .control-hover:hover:not(:disabled) {
+    background-color: var(--control-hover);
+  }
+
+  .control-active {
+    background-color: var(--control-active-bg) !important;
+    color: hsl(var(--primary)) !important;
+  }
+
+  /* === Buttons: single and group (use --surface-bg, --toolbar-shadow) === */
+  .toolbar-btn {
+    border-radius: 18px;
+    background-color: var(--surface-bg);
+    border: none;
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .toolbar-btn:hover:not(:disabled) {
+    background-color: var(--surface-bg-hover);
+  }
+
+  .dark .toolbar-btn {
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .dark .toolbar-btn:hover:not(:disabled) {
+    background-color: var(--surface-bg-hover);
+  }
+
+  .toolbar-btn-group {
+    display: flex;
+    align-items: center;
+    height: 2.5rem;
+    border-radius: 18px;
+    overflow: hidden;
+    border: none;
+    background-color: var(--surface-bg);
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .toolbar-btn-group .toolbar-btn-group-divider {
+    width: 1px;
+    height: 1.25rem;
+    background-color: var(--control-divider);
+    flex-shrink: 0;
+  }
+
+  .dark .toolbar-btn-group {
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .toolbar-btn-group button {
+    background: transparent;
+    border: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--foreground));
+    transition: background-color 0.15s;
+  }
+
+  .toolbar-btn-group button.toolbar-btn-group-icon-only {
+    position: relative;
+    padding: 0;
+    width: 2.5rem;
+    min-width: 2.5rem;
+    justify-content: center;
+  }
+
+  /* First/last/only buttons inherit group radius so hover overlays stay rounded */
+  .toolbar-btn-group>button:first-child {
+    border-radius: 18px 0 0 18px;
+  }
+
+  .toolbar-btn-group>button:last-child {
+    border-radius: 0 18px 18px 0;
+  }
+
+  .toolbar-btn-group>button:only-child {
+    border-radius: 18px;
+  }
+
+  .toolbar-btn-group button.toolbar-btn-group-icon-only::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: transparent;
+    transition: background-color 0.15s;
+    pointer-events: none;
+  }
+
+  .toolbar-btn-group button.toolbar-btn-group-icon-only:hover:not(:disabled)::before {
+    background-color: var(--control-hover);
+  }
+
+  .toolbar-btn-group button:not(.toolbar-btn-group-icon-only):hover:not(:disabled) {
+    background-color: var(--control-hover);
+  }
+
+  .toolbar-btn-group button:disabled {
+    opacity: 0.4;
+  }
+
+  /* Hide Details toggle on mobile/tablet (below 1280px) - Safari/iOS fallback */
+  @media (max-width: 1279px) {
+    .toolbar-details-mobile-hidden {
+      display: none !important;
+    }
+  }
+
+  /* Hide Resume All / Pause All on mobile/tablet (below 1280px) */
+  @media (max-width: 1279px) {
+    .toolbar-all-mobile-hidden {
+      display: none !important;
+    }
+  }
+
+  /* === Text inputs (search, form fields) === */
+  .toolbar-input {
+    border-radius: 18px;
+    background-color: var(--surface-bg) !important;
+    border: none !important;
+    box-shadow: var(--toolbar-shadow);
+    --tw-ring-shadow: 0 0 0 0;
+  }
+
+  /* === Login bar (composite input) === */
+  .login-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 2.5rem;
+    border-radius: 18px;
+    background-color: var(--surface-bg);
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .login-bar-input {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: none;
+    background: transparent;
+    color: hsl(var(--foreground));
+    outline: none;
+  }
+
+  @media (min-width: 640px) {
+    .login-bar-input {
+      min-height: 2.5rem;
+      height: 2.5rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  .login-bar-input::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .login-bar-input:focus {
+    box-shadow: none;
+  }
+
+  .login-bar-divider {
+    width: 1px;
+    height: 1.25rem;
+    background-color: rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+  }
+
+  .login-bar-btn {
+    border: none;
+    background: transparent;
+    font-weight: 500;
+    color: hsl(var(--primary));
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+
+  @media (min-width: 640px) {
+    .login-bar-btn {
+      height: 2.5rem;
+      padding: 0 1.25rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  .login-bar-btn:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  .login-bar-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .dark .login-bar {
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .dark .login-bar-input {
+    color: hsl(var(--foreground));
+  }
+
+  .dark .login-bar-input::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .dark .login-bar-divider {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .dark .login-bar-btn:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  @media (max-width: 639px) {
+
+    .login-bar .login-bar-input+.login-bar-divider+.login-bar-input,
+    .login-bar .login-bar-divider+.login-bar-btn {
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .dark .login-bar .login-bar-input+.login-bar-divider+.login-bar-input,
+    .dark .login-bar .login-bar-divider+.login-bar-btn {
+      border-top-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Match button corners to container to prevent hover background artifact */
+    .login-bar .login-bar-btn {
+      border-radius: 0 0 18px 18px;
+    }
+  }
+
+  .toolbar-input:focus,
+  .toolbar-input:focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow) !important;
+    outline: none;
+  }
+
+  .dark .toolbar-input {
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .dark .toolbar-input:focus,
+  .dark .toolbar-input:focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow) !important;
+    outline: none;
+  }
+
+  .input-macos:not(.toolbar-input) {
+    border-radius: 18px !important;
+    background-color: var(--surface-bg) !important;
+    border: none !important;
+    box-shadow: var(--toolbar-shadow);
+    --tw-ring-shadow: 0 0 0 0;
+  }
+
+  .input-macos:not(.toolbar-input):focus,
+  .input-macos:not(.toolbar-input):focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow) !important;
+    outline: none;
+  }
+
+  .dark .input-macos:not(.toolbar-input) {
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .dark .input-macos:not(.toolbar-input):focus,
+  .dark .input-macos:not(.toolbar-input):focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow) !important;
+    outline: none;
+  }
+
+  /* === Sidebar panels === */
+  .sidebar-surface {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background-color: var(--surface-bg);
+    box-shadow: var(--elevated-shadow);
+  }
+
+  .dark .sidebar-surface {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: var(--elevated-shadow);
+  }
+
+  /* Sidebar nav selection - neutral row bg, text = primary */
+  .sidebar-nav-btn-active {
+    background: var(--nav-item-active-bg) !important;
+    color: hsl(var(--primary)) !important;
+  }
+
+  /* Sidebar section headers - same font/color as table header, capitalize */
+  .sidebar-section-header {
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .detail-panel-surface {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background-color: var(--surface-bg);
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  .dark .detail-panel-surface {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: var(--toolbar-shadow);
+  }
+
+  /* Detail panel divider - subtle, matches finder-table-header */
+  .detail-panel-divider {
+    border-color: rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .detail-panel-divider {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+@layer base {
+  :root {
+    /* Design tokens: elevated surfaces (buttons, inputs, groups, dialogs) */
+    --surface-bg: #fafafa;
+    --surface-bg-hover: #f2f2f2;
+    --surface-bg-active: #eee;
+    /* Dialog/popover background - matches site (--card) for sync */
+    --dialog-bg: hsl(var(--card));
+    /* Control states (hover overlay, active bg, dividers) */
+    --control-hover: rgba(0, 0, 0, 0.06);
+    --control-active-bg: hsl(var(--primary) / 0.15);
+    /* Nav item selected state (neutral bg + primary text, e.g. sidebar) */
+    --nav-item-active-bg: hsl(0 0% 94%);
+    --control-divider: rgba(0, 0, 0, 0.15);
+    /* Scrollbar track */
+    --scrollbar-track: hsl(0 0% 68%);
+    --scrollbar-track-hover: hsl(0 0% 55%);
+    /* Slider track (distinct from input for contrast) */
+    --slider-track: hsl(0 0% 72%);
+    /* Light contour + shadow for elevated elements */
+    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(0, 0, 0, 0.144), 0 2px 8px rgba(0, 0, 0, 0.108);
+    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(0, 0, 0, 0.13), 0 2px 8px rgba(0, 0, 0, 0.097);
+    --background: 0 0% 95%;
+    --foreground: 0 0% 6%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 6%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 6%;
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 16%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 36%;
+    --accent: 0 0% 90%;
+    --accent-foreground: 0 0% 6%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 80%;
+    --input: 0 0% 80%;
+    --ring: 211 100% 50%;
+    --chart-1: 211 100% 50%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 0 72% 51%;
+    --chart-5: 262 83% 58%;
+    --radius: 0.45rem;
+    --sidebar-background: 0 0% 95%;
+    --sidebar-foreground: 0 0% 18%;
+    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 211 100% 92%;
+    --sidebar-accent-foreground: 211 100% 30%;
+    --sidebar-border: 0 0% 82%;
+    --sidebar-ring: 211 100% 50%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --surface-bg: hsl(222, 12%, 7%);
+    --surface-bg-hover: hsl(222, 12%, 9%);
+    --surface-bg-active: hsl(222, 12%, 11%);
+    /* --dialog-bg inherits from --card in .dark */
+    --control-hover: rgba(255, 255, 255, 0.06);
+    --control-active-bg: hsl(var(--primary) / 0.25);
+    --nav-item-active-bg: hsl(222 12% 18%);
+    --control-divider: rgba(255, 255, 255, 0.12);
+    --scrollbar-track: hsl(222 12% 35%);
+    --scrollbar-track-hover: hsl(222 12% 45%);
+    --slider-track: hsl(222 12% 26%);
+    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 6px 20px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
+    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 6px 20px rgba(0, 0, 0, 0.225), 0 2px 8px rgba(0, 0, 0, 0.135);
+    --background: 222 16% 4%;
+    --foreground: 222 6% 94%;
+    --card: 222 12% 11%;
+    --card-foreground: 222 6% 94%;
+    --popover: 222 12% 11%;
+    --popover-foreground: 222 6% 94%;
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 12% 18%;
+    --secondary-foreground: 222 6% 82%;
+    --muted: 222 12% 18%;
+    --muted-foreground: 222 5% 65%;
+    --accent: 222 12% 18%;
+    --accent-foreground: 222 6% 94%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 12% 26%;
+    --input: 222 12% 26%;
+    --ring: 211 100% 50%;
+    --chart-1: 211 100% 60%;
+    --chart-2: 142 71% 55%;
+    --chart-3: 38 92% 60%;
+    --chart-4: 0 72% 60%;
+    --chart-5: 262 83% 65%;
+    --sidebar-background: 222 14% 6%;
+    --sidebar-foreground: 222 6% 82%;
+    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 20% 18%;
+    --sidebar-accent-foreground: 211 100% 72%;
+    --sidebar-border: 222 12% 24%;
+    --sidebar-ring: 211 100% 50%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  .lucide {
+    stroke-width: 1.25;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    font-size: 0.875em;
+  }
+
+  body {
+    background-color: hsl(var(--card));
+    color: hsl(var(--foreground));
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(0 0% 68%);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0 0% 55%);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(222 12% 35%);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(222 12% 45%);
+}
+
+/* Finder-style table: zebra stripes, rounded rows - all rows have radius to prevent selection flicker */
+.finder-table-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.finder-table-header th {
+  height: 2.5rem;
+  max-height: 2.5rem;
+  box-sizing: border-box;
+}
+
+.dark .finder-table-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.finder-table-header-cell {
+  position: relative;
+}
+
+/* Divider at right edge of cell (between columns) to avoid overlapping text */
+.finder-table-header-cell:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 25%;
+  bottom: 25%;
+  width: 1px;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.dark .finder-table-header-cell:not(:last-child)::before {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.finder-table-spacing {
+  border-spacing: 0 1px;
+}
+
+/* Fixed row height and font across all viewports - use height (not min-height) for reliable table layout */
+.finder-table-row td {
+  height: 2.25rem;
+  max-height: 2.25rem;
+  vertical-align: middle;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.finder-table-row .text-caption {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.finder-table-row td:first-child {
+  border-radius: 11px 0 0 11px;
+  overflow: hidden;
+}
+
+.finder-table-row td:last-child {
+  border-radius: 0 11px 11px 0;
+  overflow: hidden;
+}
+
+@media (max-width: 1279px) {
+
+  /* Reserve space for Progress (5ch), Name gets remainder */
+  .finder-table th:nth-child(2),
+  .finder-table td:nth-child(2) {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .finder-table th:nth-child(4),
+  .finder-table td:nth-child(4) {
+    width: 5ch !important;
+    min-width: 5ch !important;
+    max-width: 5ch !important;
+  }
+
+  /* first-child keeps base left radius; last-child gets 0 (col 9 hidden, avoid rounding hidden cell) */
+  .finder-table-row td:last-child {
+    border-radius: 0;
+    overflow: hidden;
+  }
+}
+
+/* Below lg: only Name (1) and Progress (3) visible - right radius on col 3 */
+@media (max-width: 1023px) {
+  .finder-table-row td:nth-child(3) {
+    border-radius: 0 11px 11px 0;
+    overflow: hidden;
+  }
+}
+
+/* lg–xl: Name (1), Progress (3), Status (4) visible - right radius on col 4 */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .finder-table-row td:nth-child(4) {
+    border-radius: 0 11px 11px 0;
+    overflow: hidden;
+  }
+}
+
+.finder-table-row:nth-child(odd) {
+  background: transparent;
+}
+
+.finder-table-row:nth-child(even) {
+  background: hsl(0 0% 97%);
+}
+
+.finder-table-row:hover {
+  background: hsl(0 0% 97%) !important;
+}
+
+.finder-table-row.finder-table-row-selected,
+.finder-table-row.finder-table-row-selected:hover {
+  background: #0064e1 !important;
+  color: #fff !important;
+}
+
+.finder-table-row.finder-table-row-selected *,
+.finder-table-row.finder-table-row-selected:hover * {
+  color: inherit !important;
+}
+
+.finder-table-row.finder-table-row-selected .text-muted-foreground,
+.finder-table-row.finder-table-row-selected .text-primary,
+.finder-table-row.finder-table-row-selected .text-success,
+.finder-table-row.finder-table-row-selected:hover .text-muted-foreground,
+.finder-table-row.finder-table-row-selected:hover .text-primary,
+.finder-table-row.finder-table-row-selected:hover .text-success {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.dark .finder-table-row:nth-child(odd) {
+  background: transparent;
+}
+
+.dark .finder-table-row:nth-child(even) {
+  background: hsl(222 12% 14%);
+}
+
+.dark .finder-table-row:hover {
+  background: hsl(222 12% 18%) !important;
+}
+
+.dark .finder-table-row.finder-table-row-selected,
+.dark .finder-table-row.finder-table-row-selected:hover {
+  background: #0064e1 !important;
+  color: #fff !important;
+}
+
+/* Safari: remove focus ring, semicircle, tap highlight; prevent overlap on right */
+.finder-table-row {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.finder-table-row:focus,
+.finder-table-row:focus-visible,
+.finder-table-row:active {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
+
+/* Safari uses outline for focus - ensure it's fully disabled */
+@supports (-webkit-hyphens: none) {
+  .finder-table-row:focus {
+    outline: 0 !important;
+  }
+}
+
+/* Shared popover style: tooltips, dropdowns - no border, rounded-lg, consistent shadow */
+.popover-style {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.144), 0 4px 6px -4px rgb(0 0 0 / 0.108);
+}
+
+.dark .popover-style {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+}
+
+/* Menus and tooltips - background #f5f5f5 in light theme */
+.dropdown-menu-content,
+[role="tooltip"] {
+  background-color: #f5f5f5 !important;
+}
+
+/* Tooltip - same border and shadow as menu */
+[role="tooltip"] {
+  border: 1px solid rgba(0, 0, 0, 0.108) !important;
+  border-radius: 11px !important;
+  box-shadow:
+    0 10px 25px -5px rgb(0 0 0 / 0.225),
+    0 8px 10px -6px rgb(0 0 0 / 0.18),
+    0 4px 6px -4px rgb(0 0 0 / 0.126) !important;
+}
+
+.dark .dropdown-menu-content {
+  background-color: hsl(var(--card)) !important;
+}
+
+/* Tooltip - GitHub dark style: lighter bg, same border and shadow as menu */
+.dark [role="tooltip"] {
+  background-color: #21262d !important;
+  color: #e6edf3 !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow:
+    0 12px 32px -8px rgb(0 0 0 / 0.45),
+    0 8px 16px -8px rgb(0 0 0 / 0.35) !important;
+}
+
+/* Dropdown menu - macOS style, #56a1ff selection, normal weight, icons on left, deeper shadow */
+.dropdown-menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(0, 0, 0, 0.108) !important;
+  box-shadow:
+    0 10px 25px -5px rgb(0 0 0 / 0.225),
+    0 8px 10px -6px rgb(0 0 0 / 0.18),
+    0 4px 6px -4px rgb(0 0 0 / 0.126) !important;
+}
+
+.dark .dropdown-menu-content {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow:
+    0 12px 32px -8px rgb(0 0 0 / 0.45),
+    0 8px 16px -8px rgb(0 0 0 / 0.35) !important;
+}
+
+.dropdown-menu-item {
+  font-weight: 400 !important;
+}
+
+.dropdown-menu-item[data-highlighted],
+.dropdown-menu-item[data-state="open"] {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.dropdown-menu-item[data-highlighted] *,
+.dropdown-menu-item[data-state="open"] * {
+  color: inherit !important;
+}
+
+.dropdown-menu-item[data-highlighted] .text-muted-foreground,
+.dropdown-menu-item[data-state="open"] .text-muted-foreground {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Number input spinners - white in dark theme */
+.dark input[type="number"]::-webkit-inner-spin-button,
+.dark input[type="number"]::-webkit-outer-spin-button {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+/* macOS System Settings style - settings dialog */
+.settings-dialog {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Desktop: clip to window rounded corners */
+@media (min-width: 640px) {
+  .settings-dialog {
+    overflow: hidden;
+    border-radius: inherit;
+  }
+}
+
+/* === Dialog windows: white bg, elevated shadow (like groups) === */
+.settings-dialog-window {
+  background-color: var(--dialog-bg) !important;
+  border: none !important;
+  box-shadow: var(--toolbar-shadow) !important;
+}
+
+/* Mobile: full viewport height, no bottom offset */
+@media (max-width: 639px) {
+  .settings-dialog-window {
+    border-top: none !important;
+    border-bottom: none !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    max-width: 100vw !important;
+    min-height: 100dvh !important;
+    height: 100dvh !important;
+    padding-bottom: 0 !important;
+  }
+
+  .settings-dialog {
+    min-width: 0;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .settings-dialog>div {
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  .settings-dialog-header {
+    flex-shrink: 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .settings-dialog-footer-overlay {
+    padding-bottom: 16px;
+  }
+
+  .settings-dialog-content {
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .settings-row,
+  .settings-field,
+  .settings-group {
+    min-width: 0;
+  }
+}
+
+/* Settings dialog: fixed width (desktop only, not mobile) */
+.settings-dialog-window:has(.settings-dialog-inner) {
+  --settings-nav-width: 620px;
+}
+
+@media (min-width: 640px) {
+  .settings-dialog-window:has(.settings-dialog-inner) {
+    width: var(--settings-nav-width) !important;
+    min-width: var(--settings-nav-width) !important;
+    max-width: var(--settings-nav-width) !important;
+  }
+}
+
+/* Settings dialog inner - relative for overlay positioning, full width */
+.settings-dialog-inner {
+  padding: 0;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  min-width: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  --settings-sidebar-height: 68px;
+  --settings-footer-height: 80px;
+}
+
+/* Content spacers so scroll area doesn't hide content under overlays */
+.settings-content-top-spacer {
+  height: var(--settings-sidebar-height);
+  flex-shrink: 0;
+}
+
+.settings-content-bottom-spacer {
+  height: var(--settings-footer-height);
+  flex-shrink: 0;
+}
+
+/* Header overlay - same structure as footer: wrapper with gradient, content inside */
+.settings-dialog-header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: linear-gradient(to bottom, var(--dialog-bg) 0%, var(--dialog-bg) 35%, transparent 100%);
+  pointer-events: none;
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+.settings-dialog-header-overlay>* {
+  pointer-events: auto;
+}
+
+/* Footer overlay - fixed at bottom, gradient above content, always on top */
+.settings-dialog-footer-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding-top: 32px;
+  padding-bottom: 12px;
+  background: linear-gradient(to top, var(--dialog-bg) 0%, var(--dialog-bg) 18%, transparent 100%);
+  pointer-events: none;
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+.settings-dialog-footer-overlay>* {
+  pointer-events: auto;
+}
+
+/* Settings header nav - layout only (padding from settings-content-frame), same pattern as footer */
+.settings-dialog-header {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  container-type: inline-size;
+  container-name: settings-nav;
+}
+
+.settings-dialog-header .toolbar-btn-group {
+  width: max-content;
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .settings-dialog-header:has(.toolbar-btn-group) {
+    width: 100%;
+    max-width: var(--settings-nav-width);
+  }
+}
+
+/* Settings header nav dividers - reuse toolbar divider colors */
+.settings-dialog-header .toolbar-btn-group-divider {
+  height: 1.25rem;
+}
+
+.dark .settings-dialog-header img {
+  filter: brightness(0) invert(1);
+}
+
+/* Mobile */
+@media (max-width: 639px) {
+  .settings-dialog-header-overlay .settings-dialog-header {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .settings-dialog-header .toolbar-btn-group {
+    width: max-content;
+  }
+
+  .settings-dialog-nav-btn {
+    justify-content: center;
+    padding: 0;
+    width: 2.5rem;
+    min-width: 2.5rem;
+  }
+
+  .settings-dialog-nav-label {
+    display: none;
+  }
+
+  .settings-dialog-content {
+    padding: 0;
+  }
+}
+
+/* 640px+: show icons + text */
+@media (min-width: 640px) {
+  .settings-dialog-nav-label {
+    display: inline !important;
+  }
+
+  .settings-dialog-nav-btn {
+    white-space: nowrap;
+  }
+}
+
+/* Icons only when sidebar very narrow (container query - e.g. split view) */
+@container settings-nav (max-width: 320px) {
+  .settings-dialog-nav-label {
+    display: none !important;
+  }
+
+  .settings-dialog-nav-btn {
+    justify-content: center;
+  }
+}
+
+.settings-dialog-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: min-content;
+  padding: 0 0.625rem;
+  height: 100%;
+  flex-shrink: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: background-color 0.15s;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.settings-dialog-nav-btn:hover:not(.settings-dialog-nav-btn-active):not(:disabled) {
+  background-color: var(--control-hover);
+}
+
+.settings-dialog-nav-btn-active {
+  background-color: var(--control-active-bg) !important;
+  color: hsl(var(--primary)) !important;
+}
+
+.settings-dialog-nav-btn-active img {
+  opacity: 1;
+}
+
+.settings-dialog-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Content frame: match sidebar horizontal padding, full width */
+.settings-content-frame {
+  padding: 12px 28px;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 639px) {
+  .settings-content-frame {
+    padding: 8px 24px;
+  }
+}
+
+
+.settings-dialog-footer {
+  flex-shrink: 0;
+}
+
+
+.settings-dialog-footer {
+  padding-right: 16px;
+}
+
+.settings-dialog-footer .toolbar-btn-group {
+  border-radius: 16px;
+}
+
+.settings-dialog-footer .toolbar-btn-group>button:first-child {
+  border-radius: 16px 0 0 16px;
+}
+
+.settings-dialog-footer .toolbar-btn-group>button:last-child {
+  border-radius: 0 16px 16px 0;
+}
+
+.settings-dialog-footer .toolbar-btn-group>button:only-child {
+  border-radius: 16px;
+}
+
+/* Settings select - match dropdown-menu-content layout and item style (no icons) */
+.settings-select [role="option"]>span:first-child {
+  display: none !important;
+}
+
+.settings-select [data-radix-select-viewport] {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1px !important;
+  padding: 0 !important;
+  min-width: 100% !important;
+}
+
+.settings-select [role="option"] {
+  font-weight: 400 !important;
+  border-radius: 9px !important;
+  padding: 4px 12px !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.45 !important;
+}
+
+.settings-select [role="option"]:first-child,
+.settings-select [role="option"]:last-child {
+  border-radius: 9px !important;
+}
+
+.settings-select [role="option"][data-highlighted] {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+/* Settings content scroll - force full width, prevent content from shrinking/shifting */
+.settings-content-scroll {
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
+.settings-content-scroll>div:first-of-type {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+.settings-content-scroll>div:first-of-type>div {
+  width: 100% !important;
+  min-width: 100% !important;
+  display: block !important;
+}
+
+.settings-content-body {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+.settings-content-scroll [data-orientation="vertical"] {
+  width: 6px !important;
+}
+
+.settings-content-scroll [data-orientation="vertical"]>div {
+  background: var(--scrollbar-track);
+  border-radius: 999px;
+}
+
+.settings-content-scroll [data-orientation="vertical"]>div:hover {
+  background: var(--scrollbar-track-hover);
+}
+
+.settings-dialog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 20px;
+  color: hsl(var(--foreground));
+}
+
+/* === Element groups (settings-group, add-transfer-panel) === */
+.settings-group {
+  margin-bottom: 24px;
+  border-radius: 14px;
+  background: var(--surface-bg);
+  border: none;
+  box-shadow: var(--toolbar-shadow);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid hsl(var(--border) / 0.4);
+  min-height: 44px;
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+}
+
+.settings-row-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-row-label .settings-row-title {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+.settings-row-label .settings-row-desc {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+  margin-top: 2px;
+}
+
+.settings-row-control {
+  flex-shrink: 0;
+}
+
+.settings-row-full {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.settings-row-full .settings-row-control {
+  width: 100%;
+}
+
+/* Inline row without group - for standalone fields */
+.settings-field {
+  margin-bottom: 16px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.settings-field-label {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: hsl(var(--foreground));
+}
+
+.settings-field-desc {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+  margin-top: 4px;
+}
+
+.add-transfer-panel {
+  border: none;
+  box-shadow: var(--toolbar-shadow);
+}
+
+.add-transfer-tabs {
+  display: flex;
+  overflow: hidden;
+  background-color: var(--surface-bg) !important;
+}
+
+.dark .add-transfer-tabs {
+  background-color: var(--surface-bg-hover) !important;
+}
+
+.add-transfer-tab {
+  transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.add-transfer-tab:hover:not([data-state="active"]) {
+  background-color: var(--control-hover);
+}
+
+.add-transfer-dropzone {
+  background-color: var(--surface-bg);
+  border: 2px dashed rgba(0, 0, 0, 0.12);
+  box-shadow: var(--toolbar-shadow);
+}
+
+.add-transfer-dropzone:hover {
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.add-transfer-dropzone:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow);
+}
+
+.add-transfer-dropzone-has-file {
+  border-color: hsl(var(--primary) / 0.5);
+  background-color: hsl(var(--primary) / 0.06);
+}
+
+.add-transfer-dropzone-dragover {
+  border-color: hsl(var(--primary) / 0.6);
+  background-color: hsl(var(--primary) / 0.1);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow);
+}
+
+.dark .add-transfer-dropzone {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .add-transfer-dropzone:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow);
+}
+
+.dark .add-transfer-dropzone-has-file {
+  border-color: hsl(var(--primary) / 0.6);
+  background-color: hsl(var(--primary) / 0.12);
+}
+
+.dark .add-transfer-dropzone-dragover {
+  border-color: hsl(var(--primary) / 0.7);
+  background-color: hsl(var(--primary) / 0.15);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.35), var(--toolbar-shadow);
+}
+
+/* Slider track and range - distinct colors so they don't blend with background */
+.slider-track {
+  background-color: var(--slider-track) !important;
+}
+
+.slider-range {
+  background-color: hsl(var(--primary)) !important;
+}
+
+/* Slider thumb - deeper shadow for lift */
+.slider-thumb {
+  border: none !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.14) !important;
+}
+
+.dark .slider-thumb {
+  background-color: hsl(0 0% 96%) !important;
+  border: none !important;
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.35),
+    0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}

@@ -1,0 +1,17 @@
+{
+  "name": "qBittorrent",
+  "short_name": "qBittorrent",
+  "description": "qBittorrent Web UI",
+  "display": "standalone",
+  "start_url": "./",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

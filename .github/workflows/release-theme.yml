@@ -1,0 +1,41 @@
+name: Release theme
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+
+      - run: npm run build
+      - run: node scripts/build-theme.mjs
+        env:
+          SKIP_DEPLOY: "1"
+
+      - name: Create theme archive
+        id: archive
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          THEME_NAME="qbt-maclook"
+          mkdir -p "release/${THEME_NAME}-${VERSION}"
+          cp -r dist/public "release/${THEME_NAME}-${VERSION}/"
+          cp -r dist/private "release/${THEME_NAME}-${VERSION}/"
+          cd release && zip -r "../${THEME_NAME}-${VERSION}.zip" .
+          cd ..
+          echo "zip_path=${THEME_NAME}-${VERSION}.zip" >> $GITHUB_OUTPUT
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qbt-maclook-theme
+          path: ${{ steps.archive.outputs.zip_path }}
