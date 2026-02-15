@@ -2,6 +2,8 @@
 
 Alternative Web UI for qBittorrent-nox with macOS-style design.
 
+![Theme screenshot (light)](screenshots/light-Screen%20Shot%202026-02-15%20at%2020.11.00.png)
+
 ## Why This Theme
 
 This theme was created because there were no simple, lightweight alternative themes with native macOS styling for qBittorrent Web UI. The standard Web UI uses a legacy visual language.
