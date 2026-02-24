@@ -46,7 +46,7 @@ function SortableHeader({
         type="button"
         onClick={() => onSort(field)}
         className={cn(
-          "flex w-full items-center gap-1 border-none bg-transparent px-0 py-2 text-left text-[0.625rem] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-0 cursor-pointer",
+          "flex w-full items-center gap-1 border-none bg-transparent px-0 py-1.5 text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-0 cursor-pointer",
           justify,
           align === "right" && "text-right",
           align === "center" && "text-center justify-center"

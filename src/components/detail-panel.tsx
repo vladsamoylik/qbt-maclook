@@ -113,30 +113,40 @@ function FilesTab({ hash }: { hash: string }) {
     <TooltipProvider delayDuration={300}>
       <ScrollArea className="h-full">
         <div className="p-4">
-          <div className="finder-table-header flex items-center px-3 py-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            <div className="finder-table-header-cell w-12 shrink-0">#</div>
-            <div className="finder-table-header-cell min-w-0 flex-1 pl-3">Name</div>
-            <div className="finder-table-header-cell w-24 shrink-0 text-right">Size</div>
-            <div className="finder-table-header-cell w-20 shrink-0 text-right">Progress</div>
-          </div>
-          <div className="finder-table-body">
-            {files.map((file: TorrentFile) => (
-              <div key={file.index} className="finder-table-row flex w-full min-w-0 items-center overflow-hidden px-3 py-1.5 pr-4 text-label">
-                <div className="w-12 shrink-0 overflow-hidden text-ellipsis tabular-nums text-muted-foreground">{file.index}</div>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="min-w-0 flex-1 truncate pl-3 font-mono cursor-default">
-                      {file.name}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="max-w-[min(90vw,500px)] break-all font-mono text-label">
-                    {file.name}
-                  </TooltipContent>
-                </Tooltip>
-                <div className="w-24 shrink-0 overflow-hidden text-ellipsis text-right tabular-nums text-muted-foreground">{formatBytes(file.size)}</div>
-                <div className="w-20 shrink-0 overflow-hidden text-ellipsis text-right tabular-nums">{(file.progress * 100).toFixed(0)}%</div>
-              </div>
-            ))}
+          <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-files" role="grid">
+            <div className="finder-table-header" role="row">
+              <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">#</div>
+              <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Name</div>
+              <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Size</div>
+              <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Progress</div>
+            </div>
+            <div className="finder-table-body">
+              {files.map((file: TorrentFile) => (
+                <div key={file.index} className="finder-table-row text-body-sm">
+                  <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent tabular-nums text-muted-foreground">
+                    {file.index}
+                  </div>
+                  <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="block min-w-0 truncate font-mono cursor-default">
+                          {file.name}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-[min(90vw,500px)] break-all font-mono text-label">
+                        {file.name}
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums text-muted-foreground align-middle overflow-hidden">
+                    {formatBytes(file.size)}
+                  </div>
+                  <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                    {(file.progress * 100).toFixed(0)}%
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </ScrollArea>
@@ -149,34 +159,44 @@ function PeersTab({ hash }: { hash: string }) {
   return (
     <ScrollArea className="h-full">
       <div className="p-4">
-        <div className="finder-table-header flex items-center px-3 py-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          <div className="finder-table-header-cell min-w-0 flex-1">IP</div>
-          <div className="finder-table-header-cell w-24 shrink-0">Client</div>
-          <div className="finder-table-header-cell w-20 shrink-0 text-right">Down</div>
-          <div className="finder-table-header-cell w-20 shrink-0 text-right">Up</div>
-          <div className="finder-table-header-cell w-16 shrink-0 text-right">Progress</div>
-          <div className="finder-table-header-cell w-20 shrink-0 text-center">Type</div>
-        </div>
-        <div className="finder-table-body">
-          {peers.map((peer: TorrentPeer, i: number) => (
-            <div key={i} className="finder-table-row flex w-full items-center px-3 py-1.5 pr-4 text-body-sm">
-              <div className="min-w-0 flex-1 font-mono text-caption">
-                <span className="flex items-center gap-1.5">
-                  <Users className="h-3 w-3 text-muted-foreground shrink-0" />
-                  <span className="truncate">{peer.ip}:{peer.port}</span>
-                </span>
+        <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-peers" role="grid">
+          <div className="finder-table-header" role="row">
+            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">IP</div>
+            <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Client</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Down</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Up</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Progress</div>
+            <div className="finder-table-header-cell px-3 py-2 text-center text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Type</div>
+          </div>
+          <div className="finder-table-body">
+            {peers.map((peer: TorrentPeer, i: number) => (
+              <div key={i} className="finder-table-row text-body-sm">
+                <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent">
+                  <span className="flex items-center gap-1.5 font-mono text-caption">
+                    <Users className="h-3 w-3 text-muted-foreground shrink-0" />
+                    <span className="truncate">{peer.ip}:{peer.port}</span>
+                  </span>
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent truncate text-muted-foreground">
+                  {peer.client}
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums text-primary align-middle overflow-hidden">
+                  {formatSpeed(peer.dl_speed)}
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums text-success align-middle overflow-hidden">
+                  {formatSpeed(peer.up_speed)}
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                  {(peer.progress * 100).toFixed(0)}%
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 text-center align-middle overflow-hidden">
+                  <span className="rounded-sm bg-secondary px-1.5 py-0.5 text-caption-xs font-medium text-secondary-foreground">
+                    {peer.connection}
+                  </span>
+                </div>
               </div>
-              <div className="w-24 shrink-0 truncate text-muted-foreground">{peer.client}</div>
-              <div className="w-20 shrink-0 text-right tabular-nums text-primary">{formatSpeed(peer.dl_speed)}</div>
-              <div className="w-20 shrink-0 text-right tabular-nums text-success">{formatSpeed(peer.up_speed)}</div>
-              <div className="w-16 shrink-0 text-right tabular-nums">{(peer.progress * 100).toFixed(0)}%</div>
-              <div className="w-20 shrink-0 text-center">
-                <span className="rounded-sm bg-secondary px-1.5 py-0.5 text-caption-xs font-medium text-secondary-foreground">
-                  {peer.connection}
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </ScrollArea>
@@ -188,33 +208,41 @@ function TrackersTab({ hash }: { hash: string }) {
   return (
     <ScrollArea className="h-full">
       <div className="p-4">
-        <div className="finder-table-header flex items-center px-3 py-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          <div className="finder-table-header-cell min-w-0 flex-1">URL</div>
-          <div className="finder-table-header-cell w-16 shrink-0 text-right">Seeds</div>
-          <div className="finder-table-header-cell w-16 shrink-0 text-right">Peers</div>
-          <div className="finder-table-header-cell w-16 shrink-0 text-right">Leeches</div>
-          <div className="finder-table-header-cell w-24 shrink-0">Status</div>
-        </div>
-        <div className="finder-table-body">
-          {trackers.map((tracker: TorrentTracker, i: number) => (
-            <div key={i} className="finder-table-row flex w-full items-center px-3 py-1.5 pr-4 text-body-sm">
-              <div className="min-w-0 flex-1">
-                <span className="flex items-center gap-1.5 font-mono text-caption">
-                  <WhiteSurIcon name="link-symbolic" size={10} className="h-2.5 w-2.5 text-muted-foreground shrink-0" />
-                  <span className="truncate">{tracker.url}</span>
-                </span>
+        <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-trackers" role="grid">
+          <div className="finder-table-header" role="row">
+            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">URL</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Seeds</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Peers</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Leeches</div>
+            <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Status</div>
+          </div>
+          <div className="finder-table-body">
+            {trackers.map((tracker: TorrentTracker, i: number) => (
+              <div key={i} className="finder-table-row text-body-sm">
+                <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent">
+                  <span className="flex items-center gap-1.5 font-mono text-caption">
+                    <WhiteSurIcon name="link-symbolic" size={10} className="h-2.5 w-2.5 text-muted-foreground shrink-0" />
+                    <span className="truncate">{tracker.url}</span>
+                  </span>
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                  {tracker.num_seeds}
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                  {tracker.num_peers}
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                  {tracker.num_leeches}
+                </div>
+                <div role="gridcell" className="finder-table-cell px-3 py-1 align-middle overflow-hidden">
+                  <span className="flex items-center gap-1.5">
+                    <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", tracker.status === 2 ? "bg-success" : "bg-warning")} />
+                    <span className="truncate text-muted-foreground">{tracker.msg}</span>
+                  </span>
+                </div>
               </div>
-              <div className="w-16 shrink-0 text-right tabular-nums">{tracker.num_seeds}</div>
-              <div className="w-16 shrink-0 text-right tabular-nums">{tracker.num_peers}</div>
-              <div className="w-16 shrink-0 text-right tabular-nums">{tracker.num_leeches}</div>
-              <div className="w-24 shrink-0">
-                <span className="flex items-center gap-1.5">
-                  <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", tracker.status === 2 ? "bg-success" : "bg-warning")} />
-                  <span className="truncate text-muted-foreground">{tracker.msg}</span>
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </ScrollArea>

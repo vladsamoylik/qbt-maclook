@@ -560,9 +560,10 @@ body {
 }
 
 .finder-table-header .finder-table-header-cell {
-  height: 2.5rem;
-  max-height: 2.5rem;
+  height: 2rem;
+  max-height: 2rem;
   box-sizing: border-box;
+  font-size: 0.6875rem;
 }
 
 .dark .finder-table-header {
@@ -594,9 +595,11 @@ body {
   box-sizing: border-box;
 }
 
-/* Grid layout (replaces table) - rows are divs so z-index works for selected row */
+/* Grid layout - use subgrid so header and row columns align exactly */
 .finder-table-grid {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5ch;
+  grid-auto-rows: auto;
   width: 100%;
   min-width: 0;
 }
@@ -607,41 +610,65 @@ body {
   }
 }
 
-/* Mobile: Name + Progress only (hidden cells use display:none, so 2 cols) */
+/* Mobile: 2 cols. Header and rows inherit via subgrid. */
 .finder-table-grid .finder-table-header {
+  grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 5ch;
+  grid-template-columns: subgrid;
   width: 100%;
   min-width: 0;
-  max-width: 100%;
+}
+
+.finder-table-grid .finder-table-body {
+  display: contents;
 }
 
 .finder-table-grid .finder-table-row {
+  grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 5ch;
+  grid-template-columns: subgrid;
   width: 100%;
   min-width: 0;
-  max-width: 100%;
 }
 
-/* lg: + Status */
+/* lg: 3 columns */
 @media (min-width: 1024px) {
-  .finder-table-grid .finder-table-header,
-  .finder-table-grid .finder-table-row {
+  .finder-table-grid {
     grid-template-columns: minmax(0, 1fr) 14ch 14ch;
   }
 }
 
-/* xl: all 9 columns */
+/* xl: 9 columns */
 @media (min-width: 1280px) {
-  .finder-table-grid .finder-table-header,
-  .finder-table-grid .finder-table-row {
+  .finder-table-grid {
     grid-template-columns: minmax(0, 1fr) 11ch 14ch 14ch 6ch 6ch 14ch 14ch 8ch;
   }
 }
 
-.finder-table-spacing {
-  /* Legacy - kept for any refs */
+/* Detail panel tables: fixed column configs */
+.detail-panel-surface .finder-table-detail-files.finder-table-grid {
+  grid-template-columns: 3rem minmax(0, 1fr) 6rem 5rem;
+}
+
+.detail-panel-surface .finder-table-detail-peers.finder-table-grid {
+  grid-template-columns: minmax(0, 1fr) 6rem 5rem 5rem 4rem 5rem;
+}
+
+.detail-panel-surface .finder-table-detail-trackers.finder-table-grid {
+  grid-template-columns: minmax(0, 1fr) 4rem 4rem 4rem 6rem;
+}
+
+/* Detail table row rounding: last cell gets right radius (override main nth-child rules) */
+.detail-panel-surface .finder-table-grid .finder-table-row .finder-table-cell:nth-child(n) {
+  border-radius: 0;
+}
+
+.detail-panel-surface .finder-table-grid .finder-table-row .finder-table-cell:first-child {
+  border-radius: 11px 0 0 11px;
+}
+
+.detail-panel-surface .finder-table-grid .finder-table-row .finder-table-cell:last-child {
+  border-radius: 0 11px 11px 0;
 }
 
 /* Stacking: selected row (div) renders above siblings */
@@ -683,7 +710,7 @@ body {
 /* Row rounding - row has background */
 .finder-table-row {
   border-radius: 11px;
-  scroll-margin-top: 2.5rem;
+  scroll-margin-top: 2rem;
 }
 
 /* First cell: left side rounded so blue selection border follows the curve */
