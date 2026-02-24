@@ -3,7 +3,7 @@
  * Not sent to qBittorrent API.
  */
 
-const STORAGE_KEY = "qbt-maclook"
+const STORAGE_KEY = "qbt-applegui-theme"
 export type ThemeMode = "light" | "dark" | "system"
 
 const THEME_COLORS = { light: "#f2f2f2", dark: "#08090c" } as const

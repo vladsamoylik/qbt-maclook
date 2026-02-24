@@ -1,8 +1,6 @@
-# qBt-MacLook
+# qBittorrent Apple Theme
 
 Alternative Web UI for qBittorrent-nox with macOS-style design.
-
-![Theme screenshot (light)](screenshots/light-Screen%20Shot%202026-02-15%20at%2020.11.00.png)
 
 ## Why This Theme
 
@@ -29,32 +27,42 @@ This theme was created because there were no simple, lightweight alternative the
 
 1. Build and deploy the theme:
    ```bash
-   cd ~/qbt-maclook
+   cd ~/qbt-applegui
    npm install
    npm run build:theme
    ```
 
 2. In qBittorrent, set **Tools → Preferences → Web UI → Alternative Web UI** to:
    ```
-   ~/.config/qBittorrent/themes/qbt-maclook
+   ~/.config/qBittorrent/themes/applegui
    ```
-   (or the full path: `/home/YOUR_USER/.config/qBittorrent/themes/qbt-maclook`)
+   (or the full path: `/home/YOUR_USER/.config/qBittorrent/themes/applegui`)
 
 3. Restart qBittorrent and access the Web UI.
 
 ## Build Commands
 
-- `npm run build:theme` — build Vite project and deploy to `~/.config/qBittorrent/themes/qbt-maclook`
+- `npm run build:theme` — build Vite project and deploy to `~/.config/qBittorrent/themes/applegui`
+- `npm run deploy:remote` — deploy built theme to remote server via SSH (requires `build:theme` first)
 - `npm run clean` — remove `dist/` and `.vite/`
 - `npm run build` — build only (output in `dist/`, no deploy)
 - `npm run dev` — development server with HMR
+
+## Remote Installation (SSH)
+
+1. Build the theme: `npm run build:theme`
+2. Deploy to remote server:
+   ```bash
+   SSH_HOST=myserver.com SSH_USER=john npm run deploy:remote
+   ```
+3. Optional env vars: `SSH_PATH` (default: `~/.config/qBittorrent/themes/applegui`), `SSH_PORT`, `SSH_KEY`
 
 ## Structure
 
 qBittorrent expects a folder with `public/` (login) and `private/` (main UI):
 
 ```
-~/.config/qBittorrent/themes/qbt-maclook/
+~/.config/qBittorrent/themes/applegui/
 ├── public/
 │   ├── index.html
 │   ├── login.html

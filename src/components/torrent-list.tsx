@@ -41,7 +41,7 @@ function SortableHeader({
   const isActive = sortField === field
   const justify = align === "right" ? "justify-end" : align === "center" ? "justify-center" : "justify-start"
   return (
-    <th className={cn("finder-table-header-cell p-0 align-middle", className)}>
+    <div role="columnheader" className={cn("finder-table-header-cell p-0 align-middle", className)}>
       <button
         type="button"
         onClick={() => onSort(field)}
@@ -61,7 +61,7 @@ function SortableHeader({
           {sortDirection === "asc" ? "\u2191" : "\u2193"}
         </span>
       </button>
-    </th>
+    </div>
   )
 }
 
@@ -87,7 +87,7 @@ export function TorrentList() {
   }
 
   const orderedHashes = useMemo(() => filteredTorrents.map((t) => t.hash), [filteredTorrents])
-  const rowRefsMap = useRef<Map<number, HTMLTableRowElement | null>>(new Map())
+  const rowRefsMap = useRef<Map<number, HTMLDivElement | null>>(new Map())
 
   const getCurrentIndex = useCallback(() => {
     if (selectedTorrentHashes.size === 0) return -1
@@ -96,6 +96,14 @@ export function TorrentList() {
       .filter((i) => i >= 0)
     return indices.length === 0 ? -1 : Math.max(...indices)
   }, [filteredTorrents, selectedTorrentHashes])
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") clearSelection()
+    }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [clearSelection])
 
   const getCurrentIndexForUp = useCallback(() => {
     if (selectedTorrentHashes.size === 0) return -1
@@ -113,7 +121,7 @@ export function TorrentList() {
       }
       if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return
       const target = e.target as HTMLElement
-      if (!target.closest(".finder-table-body tr")) return
+      if (!target.closest(".finder-table-body .finder-table-row")) return
       e.preventDefault()
       const n = orderedHashes.length
       if (n === 0) return
@@ -128,7 +136,7 @@ export function TorrentList() {
       const hash = orderedHashes[newIndex]
       selectTorrent(hash, newIndex, false, e.shiftKey, orderedHashes)
       queueMicrotask(() => {
-        rowRefsMap.current.get(newIndex)?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+        rowRefsMap.current.get(newIndex)?.scrollIntoView({ block: "nearest", behavior: "smooth", inline: "nearest" })
       })
     },
     [orderedHashes, selectTorrent, clearSelection, getCurrentIndex, getCurrentIndexForUp]
@@ -143,32 +151,22 @@ export function TorrentList() {
   }
 
   const handleBackgroundClick = (e: React.MouseEvent) => {
-    if (!(e.target as HTMLElement).closest('tbody tr')) {
+    if (!(e.target as HTMLElement).closest('.finder-table-row')) {
       clearSelection()
     }
   }
 
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") clearSelection()
-    }
-    window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [clearSelection])
-
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col overflow-x-auto" onClick={handleBackgroundClick}>
+    <div className="flex h-full min-h-0 flex-1 flex-col overflow-x-hidden xl:overflow-x-auto" onClick={handleBackgroundClick}>
         <ScrollArea className="min-h-0 flex-1">
         <div
-          className="finder-table mx-0 mb-2 pt-1"
-          role="table"
+          className="finder-table finder-table-scroll-content finder-table-grid mx-0 mb-2"
+          role="grid"
           aria-label="Torrent list"
           onKeyDown={handleTableKeyDown}
           tabIndex={-1}
         >
-          <table className="w-full min-w-0 xl:min-w-[640px] table-fixed border-collapse border-separate finder-table-spacing">
-            <thead>
-              <tr className="finder-table-header sticky top-0 z-10 bg-card">
+          <div className="finder-table-header sticky top-0 z-10 bg-card" role="row">
                 <SortableHeader
                   field="name"
                   label="Name"
@@ -249,13 +247,12 @@ export function TorrentList() {
                   sortDirection={sortDirection}
                   onSort={handleSort}
                 />
-              </tr>
-            </thead>
-            <tbody className="finder-table-body">
+          </div>
+          <div className="finder-table-body">
               {filteredTorrents.map((torrent, index) => {
                 const isSelected = selectedTorrentHashes.has(torrent.hash)
                 return (
-                  <tr
+                  <div
                     key={torrent.hash}
                     ref={(el) => rowRefsMap.current.set(index, el)}
                     role="row"
@@ -274,7 +271,7 @@ export function TorrentList() {
                       isSelected && "finder-table-row-selected"
                     )}
                   >
-                    <td className={cn("min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2", isSelected ? "border-l-[#0064e1]" : "border-l-transparent")}>
+                    <div role="gridcell" className={cn("finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2", isSelected ? "border-l-[#0064e1]" : "border-l-transparent")}>
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="min-w-0">
                           <p className="truncate font-medium text-foreground">{torrent.name}</p>
@@ -283,11 +280,11 @@ export function TorrentList() {
                           )}
                         </div>
                       </div>
-                    </td>
-                    <td className="hidden w-[11ch] min-w-[11ch] max-w-[11ch] px-3 py-1 text-right tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:table-cell">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell hidden w-[11ch] min-w-[11ch] max-w-[11ch] px-3 py-1 text-right tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {formatBytes(torrent.size)}
-                    </td>
-                    <td className="w-[5ch] min-w-[5ch] max-w-[5ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] px-2 py-1 align-middle">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell w-[5ch] min-w-[5ch] max-w-[5ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] px-2 py-1 align-middle">
                       {/* Mobile: percent only */}
                       <span className="text-caption tabular-nums text-muted-foreground xl:hidden">
                         {(torrent.progress * 100).toFixed(0)}%
@@ -304,17 +301,17 @@ export function TorrentList() {
                           {(torrent.progress * 100).toFixed(0)}%
                         </span>
                       </div>
-                    </td>
-                    <td className="hidden w-[18ch] min-w-[18ch] max-w-[18ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] px-3 py-1 text-left whitespace-nowrap align-middle lg:table-cell">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell hidden w-[18ch] min-w-[18ch] max-w-[18ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] px-3 py-1 text-left whitespace-nowrap align-middle lg:block">
                       <StatusCell torrent={torrent} />
-                    </td>
-                    <td className="hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:table-cell">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {torrent.num_seeds}
-                    </td>
-                    <td className="hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:table-cell">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {torrent.num_leechs}
-                    </td>
-                    <td className="hidden w-[14ch] min-w-[14ch] max-w-[14ch] h-5 px-3 py-1 text-left tabular-nums align-middle xl:table-cell">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell hidden w-[14ch] min-w-[14ch] max-w-[14ch] h-5 px-3 py-1 text-left tabular-nums align-middle xl:block">
                       {torrent.dlspeed > 0 ? (
                         <span className="flex items-center gap-1 whitespace-nowrap text-primary">
                           <WhiteSurIcon name="download-symbolic" size={10} className="h-2.5 w-2.5 shrink-0" />
@@ -323,8 +320,8 @@ export function TorrentList() {
                       ) : (
                         <span className="text-muted-foreground/40">{"\u2014"}</span>
                       )}
-                    </td>
-                    <td className="hidden w-[14ch] min-w-[14ch] max-w-[14ch] h-5 px-3 py-1 text-left tabular-nums align-middle xl:table-cell">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell hidden w-[14ch] min-w-[14ch] max-w-[14ch] h-5 px-3 py-1 text-left tabular-nums align-middle xl:block">
                       {torrent.upspeed > 0 ? (
                         <span className="flex items-center gap-1 whitespace-nowrap text-success">
                           <WhiteSurIcon name="upload-symbolic" size={10} className="h-2.5 w-2.5 shrink-0" />
@@ -333,15 +330,14 @@ export function TorrentList() {
                       ) : (
                         <span className="text-muted-foreground/40">{"\u2014"}</span>
                       )}
-                    </td>
-                    <td className="hidden w-[8ch] min-w-[8ch] max-w-[8ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:table-cell">
+                    </div>
+                    <div role="gridcell" className="finder-table-cell hidden w-[8ch] min-w-[8ch] max-w-[8ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {torrent.progress >= 1 ? "\u2014" : formatETA(torrent.eta)}
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 )
               })}
-            </tbody>
-          </table>
+          </div>
         </div>
       </ScrollArea>
     </div>

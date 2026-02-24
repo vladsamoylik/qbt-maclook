@@ -261,16 +261,16 @@ export function DetailPanel() {
             </TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="general" className="flex-1 m-0 overflow-hidden">
+        <TabsContent value="general" className="flex-1 m-0 overflow-hidden data-[state=inactive]:hidden" forceMount>
           <GeneralTab />
         </TabsContent>
-        <TabsContent value="files" className="flex-1 m-0 overflow-hidden">
+        <TabsContent value="files" className="flex-1 m-0 overflow-hidden data-[state=inactive]:hidden" forceMount>
           <FilesTab hash={selectedTorrent.hash} />
         </TabsContent>
-        <TabsContent value="peers" className="flex-1 m-0 overflow-hidden">
+        <TabsContent value="peers" className="flex-1 m-0 overflow-hidden data-[state=inactive]:hidden" forceMount>
           <PeersTab hash={selectedTorrent.hash} />
         </TabsContent>
-        <TabsContent value="trackers" className="flex-1 m-0 overflow-hidden">
+        <TabsContent value="trackers" className="flex-1 m-0 overflow-hidden data-[state=inactive]:hidden" forceMount>
           <TrackersTab hash={selectedTorrent.hash} />
         </TabsContent>
       </Tabs>

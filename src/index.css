@@ -41,7 +41,10 @@ body {
    * --control-active-bg, --control-divider, --nav-item-active-bg,
    * --scrollbar-track, --scrollbar-track-hover, --slider-track
    * Classes: .elevated-surface-shadow, .control-hover, .control-active
-   * Elements: toolbar-btn, toolbar-btn-group, toolbar-input, settings-dialog, etc.
+   *
+   * Single control group (reused everywhere): .toolbar-btn-group + .toolbar-btn-group-divider
+   * + .toolbar-btn-group-icon-only. Used in: main toolbar, settings header/footer,
+   * add/delete dialogs. Dark theme icons (including <img>) are forced white inside.
    */
 
   /* Shared elevated surface shadow */
@@ -123,7 +126,6 @@ body {
     justify-content: center;
   }
 
-  /* First/last/only buttons inherit group radius so hover overlays stay rounded */
   .toolbar-btn-group>button:first-child {
     border-radius: 18px 0 0 18px;
   }
@@ -156,6 +158,12 @@ body {
 
   .toolbar-btn-group button:disabled {
     opacity: 0.4;
+  }
+
+  /* Dark theme: control icons (toolbar, login bar) use white */
+  .dark .toolbar-btn-group img,
+  .dark .login-bar img {
+    filter: brightness(0) invert(1);
   }
 
   /* Hide Details toggle on mobile/tablet (below 1280px) - Safari/iOS fallback */
@@ -383,43 +391,45 @@ body {
 @layer base {
   :root {
     /* Design tokens: elevated surfaces (buttons, inputs, groups, dialogs) */
-    --surface-bg: #fafafa;
-    --surface-bg-hover: #f2f2f2;
-    --surface-bg-active: #eee;
+    --surface-bg: #f8f8f8;
+    --surface-bg-hover: hsl(0 0% 95%);
+    --surface-bg-active: hsl(0 0% 93%);
     /* Dialog/popover background - matches site (--card) for sync */
     --dialog-bg: hsl(var(--card));
     /* Control states (hover overlay, active bg, dividers) */
     --control-hover: rgba(0, 0, 0, 0.06);
     --control-active-bg: hsl(var(--primary) / 0.15);
     /* Nav item selected state (neutral bg + primary text, e.g. sidebar) */
-    --nav-item-active-bg: hsl(0 0% 94%);
-    --control-divider: rgba(0, 0, 0, 0.15);
+    --nav-item-active-bg: hsl(0 0% 90%);
+    --control-divider: rgba(0, 0, 0, 0.12);
     /* Scrollbar track */
     --scrollbar-track: hsl(0 0% 68%);
     --scrollbar-track-hover: hsl(0 0% 55%);
     /* Slider track (distinct from input for contrast) */
     --slider-track: hsl(0 0% 72%);
-    /* Light contour + shadow for elevated elements */
-    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(0, 0, 0, 0.144), 0 2px 8px rgba(0, 0, 0, 0.108);
-    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(0, 0, 0, 0.13), 0 2px 8px rgba(0, 0, 0, 0.097);
-    --background: 0 0% 95%;
-    --foreground: 0 0% 6%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 6%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 6%;
+    /* Light theme: white contour + shadow for elevated elements */
+    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 8px 24px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* Deeper shadow for modal dialogs (Add, Delete, Settings) */
+    --dialog-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+    --background: 240 5% 96%;
+    --foreground: 0 0% 9%;
+    --card: 240 5% 96%;
+    --card-foreground: 0 0% 9%;
+    --popover: 240 5% 96%;
+    --popover-foreground: 0 0% 9%;
     --primary: 211 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 16%;
-    --muted: 0 0% 92%;
-    --muted-foreground: 0 0% 36%;
-    --accent: 0 0% 90%;
+    --secondary: 0 0% 92%;
+    --secondary-foreground: 0 0% 18%;
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 38%;
+    --accent: 0 0% 92%;
     --accent-foreground: 0 0% 6%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 80%;
-    --input: 0 0% 80%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
     --ring: 211 100% 50%;
     --chart-1: 211 100% 50%;
     --chart-2: 142 71% 45%;
@@ -427,7 +437,7 @@ body {
     --chart-4: 0 72% 51%;
     --chart-5: 262 83% 58%;
     --radius: 0.45rem;
-    --sidebar-background: 0 0% 95%;
+    --sidebar-background: 240 5% 96%;
     --sidebar-foreground: 0 0% 18%;
     --sidebar-primary: 211 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -442,50 +452,52 @@ body {
   }
 
   .dark {
-    --surface-bg: hsl(222, 12%, 7%);
-    --surface-bg-hover: hsl(222, 12%, 9%);
-    --surface-bg-active: hsl(222, 12%, 11%);
+    /* Cool gray: blue tint (hue 220), clearly cold */
+    --surface-bg: hsl(220, 8%, 10%);
+    --surface-bg-hover: hsl(220, 8%, 12%);
+    --surface-bg-active: hsl(220, 8%, 14%);
     /* --dialog-bg inherits from --card in .dark */
     --control-hover: rgba(255, 255, 255, 0.06);
     --control-active-bg: hsl(var(--primary) / 0.25);
-    --nav-item-active-bg: hsl(222 12% 18%);
-    --control-divider: rgba(255, 255, 255, 0.12);
-    --scrollbar-track: hsl(222 12% 35%);
-    --scrollbar-track-hover: hsl(222 12% 45%);
-    --slider-track: hsl(222 12% 26%);
-    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 6px 20px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
-    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 6px 20px rgba(0, 0, 0, 0.225), 0 2px 8px rgba(0, 0, 0, 0.135);
-    --background: 222 16% 4%;
-    --foreground: 222 6% 94%;
-    --card: 222 12% 11%;
-    --card-foreground: 222 6% 94%;
-    --popover: 222 12% 11%;
-    --popover-foreground: 222 6% 94%;
+    --nav-item-active-bg: hsl(220 8% 20%);
+    --control-divider: rgba(255, 255, 255, 0.1);
+    --scrollbar-track: hsl(220 6% 38%);
+    --scrollbar-track-hover: hsl(220 6% 48%);
+    --slider-track: hsl(220 6% 28%);
+    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 6px 20px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.12);
+    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 6px 20px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+    --dialog-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 25px 60px -12px rgba(0, 0, 0, 0.5), 0 16px 32px -8px rgba(0, 0, 0, 0.35);
+    --background: 220 10% 8%;
+    --foreground: 220 6% 94%;
+    --card: 220 8% 14%;
+    --card-foreground: 220 6% 94%;
+    --popover: 220 8% 14%;
+    --popover-foreground: 220 6% 94%;
     --primary: 211 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 222 12% 18%;
-    --secondary-foreground: 222 6% 82%;
-    --muted: 222 12% 18%;
-    --muted-foreground: 222 5% 65%;
-    --accent: 222 12% 18%;
-    --accent-foreground: 222 6% 94%;
+    --secondary: 220 8% 20%;
+    --secondary-foreground: 220 6% 82%;
+    --muted: 220 8% 20%;
+    --muted-foreground: 220 5% 62%;
+    --accent: 220 8% 20%;
+    --accent-foreground: 220 6% 94%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 12% 26%;
-    --input: 222 12% 26%;
+    --border: 220 6% 28%;
+    --input: 220 6% 28%;
     --ring: 211 100% 50%;
     --chart-1: 211 100% 60%;
     --chart-2: 142 71% 55%;
     --chart-3: 38 92% 60%;
     --chart-4: 0 72% 60%;
     --chart-5: 262 83% 65%;
-    --sidebar-background: 222 14% 6%;
-    --sidebar-foreground: 222 6% 82%;
+    --sidebar-background: 220 10% 10%;
+    --sidebar-foreground: 220 6% 82%;
     --sidebar-primary: 211 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 20% 18%;
+    --sidebar-accent: 220 12% 20%;
     --sidebar-accent-foreground: 211 100% 72%;
-    --sidebar-border: 222 12% 24%;
+    --sidebar-border: 220 6% 26%;
     --sidebar-ring: 211 100% 50%;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -535,11 +547,11 @@ body {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: hsl(222 12% 35%);
+  background: hsl(220 6% 38%);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: hsl(222 12% 45%);
+  background: hsl(220 6% 48%);
 }
 
 /* Finder-style table: zebra stripes, rounded rows - all rows have radius to prevent selection flicker */
@@ -547,7 +559,7 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.finder-table-header th {
+.finder-table-header .finder-table-header-cell {
   height: 2.5rem;
   max-height: 2.5rem;
   box-sizing: border-box;
@@ -576,91 +588,157 @@ body {
   background-color: rgba(255, 255, 255, 0.06);
 }
 
-.finder-table-spacing {
-  border-spacing: 0 1px;
+/* Reserve right space so vertical scrollbar does not overlap table content (scrollbar width ~10px) */
+.finder-table-scroll-content {
+  padding-right: 10px;
+  box-sizing: border-box;
 }
 
-/* Fixed row height and font across all viewports - use height (not min-height) for reliable table layout */
-.finder-table-row td {
+/* Grid layout (replaces table) - rows are divs so z-index works for selected row */
+.finder-table-grid {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+@media (min-width: 1280px) {
+  .finder-table-grid {
+    min-width: 640px;
+  }
+}
+
+/* Mobile: Name + Progress only (hidden cells use display:none, so 2 cols) */
+.finder-table-grid .finder-table-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5ch;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.finder-table-grid .finder-table-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5ch;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* lg: + Status */
+@media (min-width: 1024px) {
+  .finder-table-grid .finder-table-header,
+  .finder-table-grid .finder-table-row {
+    grid-template-columns: minmax(0, 1fr) 14ch 14ch;
+  }
+}
+
+/* xl: all 9 columns */
+@media (min-width: 1280px) {
+  .finder-table-grid .finder-table-header,
+  .finder-table-grid .finder-table-row {
+    grid-template-columns: minmax(0, 1fr) 11ch 14ch 14ch 6ch 6ch 14ch 14ch 8ch;
+  }
+}
+
+.finder-table-spacing {
+  /* Legacy - kept for any refs */
+}
+
+/* Stacking: selected row (div) renders above siblings */
+.finder-table-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* Fixed row height - use height for reliable layout */
+.finder-table-row .finder-table-cell {
+  display: flex;
+  align-items: center;
+  min-height: 2.25rem;
   height: 2.25rem;
-  max-height: 2.25rem;
-  vertical-align: middle;
   font-size: 0.9375rem;
   line-height: 1.45;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-.finder-table-row .text-caption {
-  font-size: 0.75rem;
-  line-height: 1.4;
-}
-
-.finder-table-row td:first-child {
-  border-radius: 11px 0 0 11px;
-  overflow: hidden;
-}
-
-.finder-table-row td:last-child {
-  border-radius: 0 11px 11px 0;
-  overflow: hidden;
-}
-
-@media (max-width: 1279px) {
-
-  /* Reserve space for Progress (5ch), Name gets remainder */
-  .finder-table th:nth-child(2),
-  .finder-table td:nth-child(2) {
-    min-width: 0;
-    max-width: none;
-  }
-
-  .finder-table th:nth-child(4),
-  .finder-table td:nth-child(4) {
-    width: 5ch !important;
-    min-width: 5ch !important;
-    max-width: 5ch !important;
-  }
-
-  /* first-child keeps base left radius; last-child gets 0 (col 9 hidden, avoid rounding hidden cell) */
-  .finder-table-row td:last-child {
-    border-radius: 0;
-    overflow: hidden;
-  }
-}
-
-/* Below lg: only Name (1) and Progress (3) visible - right radius on col 3 */
+/* Override: hidden cells must stay hidden (base rule above has higher specificity than Tailwind .hidden) */
 @media (max-width: 1023px) {
-  .finder-table-row td:nth-child(3) {
-    border-radius: 0 11px 11px 0;
-    overflow: hidden;
+  .finder-table-grid .finder-table-row .finder-table-cell.hidden {
+    display: none !important;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  /* xl:block cells stay hidden until 1280px; lg:block cells already visible */
+  .finder-table-grid .finder-table-row .finder-table-cell.hidden:not(.lg\:block) {
+    display: none !important;
   }
 }
 
-/* lg–xl: Name (1), Progress (3), Status (4) visible - right radius on col 4 */
-@media (max-width: 1279px) and (min-width: 1024px) {
-  .finder-table-row td:nth-child(4) {
+.finder-table-row .finder-table-cell > div {
+  min-width: 0;
+}
+
+/* Row rounding - row has background */
+.finder-table-row {
+  border-radius: 11px;
+  scroll-margin-top: 2.5rem;
+}
+
+/* First cell: left side rounded so blue selection border follows the curve */
+.finder-table-row .finder-table-cell:first-child {
+  border-radius: 11px 0 0 11px;
+}
+
+/* Last visible cell: right side rounded (varies by breakpoint) */
+.finder-table-row .finder-table-cell:nth-child(3) {
+  border-radius: 0 11px 11px 0;
+}
+
+@media (min-width: 1024px) {
+  .finder-table-row .finder-table-cell:nth-child(3) {
+    border-radius: 0;
+  }
+  .finder-table-row .finder-table-cell:nth-child(4) {
     border-radius: 0 11px 11px 0;
-    overflow: hidden;
   }
 }
+
+@media (min-width: 1280px) {
+  .finder-table-row .finder-table-cell:nth-child(4) {
+    border-radius: 0;
+  }
+  .finder-table-row .finder-table-cell:last-child {
+    border-radius: 0 11px 11px 0;
+  }
+}
+
+/* Same font size in all table cells (text-caption etc. inherit from cell) */
+.finder-table-row .text-caption {
+  font-size: inherit;
+  line-height: inherit;
+}
+
 
 .finder-table-row:nth-child(odd) {
   background: transparent;
 }
 
 .finder-table-row:nth-child(even) {
-  background: hsl(0 0% 97%);
+  background: hsl(0 0% 93%);
 }
 
 .finder-table-row:hover {
-  background: hsl(0 0% 97%) !important;
+  background: hsl(0 0% 93%) !important;
 }
 
 .finder-table-row.finder-table-row-selected,
 .finder-table-row.finder-table-row-selected:hover {
   background: #0064e1 !important;
   color: #fff !important;
+  position: relative;
+  z-index: 2;
 }
 
 .finder-table-row.finder-table-row-selected *,
@@ -682,17 +760,19 @@ body {
 }
 
 .dark .finder-table-row:nth-child(even) {
-  background: hsl(222 12% 14%);
+  background: hsl(220 8% 18%);
 }
 
 .dark .finder-table-row:hover {
-  background: hsl(222 12% 18%) !important;
+  background: hsl(220 8% 22%) !important;
 }
 
 .dark .finder-table-row.finder-table-row-selected,
 .dark .finder-table-row.finder-table-row-selected:hover {
   background: #0064e1 !important;
   color: #fff !important;
+  position: relative;
+  z-index: 2;
 }
 
 /* Safari: remove focus ring, semicircle, tap highlight; prevent overlap on right */
@@ -819,11 +899,11 @@ body {
   }
 }
 
-/* === Dialog windows: white bg, elevated shadow (like groups) === */
+/* === Dialog windows: Add, Delete, Settings - unified class, deeper shadow === */
 .settings-dialog-window {
   background-color: var(--dialog-bg) !important;
   border: none !important;
-  box-shadow: var(--toolbar-shadow) !important;
+  box-shadow: var(--dialog-shadow) !important;
 }
 
 /* Mobile: full viewport height, no bottom offset */
@@ -969,13 +1049,9 @@ body {
   }
 }
 
-/* Settings header nav dividers - reuse toolbar divider colors */
+/* Settings header nav dividers - reuse toolbar divider colors (icons: .dark .toolbar-btn-group img above) */
 .settings-dialog-header .toolbar-btn-group-divider {
   height: 1.25rem;
-}
-
-.dark .settings-dialog-header img {
-  filter: brightness(0) invert(1);
 }
 
 /* Mobile */

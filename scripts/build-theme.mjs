@@ -5,7 +5,6 @@
  */
 import { cpSync, mkdirSync, rmSync, existsSync } from "fs"
 import { join, dirname } from "path"
-import { homedir } from "os"
 import { fileURLToPath } from "url"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -39,13 +38,11 @@ for (const name of ["index.html", "favicon.svg", "assets", "icons"]) {
   if (existsSync(p)) rmSync(p, { recursive: true })
 }
 
-if (!process.env.SKIP_DEPLOY) {
-  const themePath = join(process.env.HOME || homedir(), ".config", "qBittorrent", "themes", "qbt-maclook")
-  mkdirSync(themePath, { recursive: true })
-  rmSync(join(themePath, "public"), { recursive: true, force: true })
-  rmSync(join(themePath, "private"), { recursive: true, force: true })
-  cpSync(publicDir, join(themePath, "public"), { recursive: true })
-  cpSync(privateDir, join(themePath, "private"), { recursive: true })
-  console.log("Theme built and deployed to:", themePath)
-}
+const themePath = join(process.env.HOME || "/home/haxver", ".config", "qBittorrent", "themes", "applegui")
+mkdirSync(themePath, { recursive: true })
+rmSync(join(themePath, "public"), { recursive: true, force: true })
+rmSync(join(themePath, "private"), { recursive: true, force: true })
+cpSync(publicDir, join(themePath, "public"), { recursive: true })
+cpSync(privateDir, join(themePath, "private"), { recursive: true })
+console.log("Theme built and deployed to:", themePath)
 console.log("Structure: dist/public/ and dist/private/")

@@ -2,6 +2,8 @@ import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import path from "path"
 
+const isDebug = process.env.DEBUG_BUILD === "1"
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -13,5 +15,6 @@ export default defineConfig({
   build: {
     outDir: "dist",
     assetsDir: "assets",
+    ...(isDebug && { minify: false, sourcemap: true }),
   },
 })

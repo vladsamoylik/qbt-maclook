@@ -218,7 +218,7 @@ export function Toolbar({ onMenuClick }: ToolbarProps) {
             </Tooltip>
           </div>
 
-          {/* Settings & Logout - hidden on mobile */}
+          {/* Settings - hidden on mobile */}
           <div className="toolbar-btn-group hidden lg:flex" role="group" aria-label="Settings">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -233,7 +233,9 @@ export function Toolbar({ onMenuClick }: ToolbarProps) {
               </TooltipTrigger>
               <TooltipContent>Settings</TooltipContent>
             </Tooltip>
-            <div className="toolbar-btn-group-divider" aria-hidden="true" />
+          </div>
+          {/* Logout - hidden on mobile */}
+          <div className="toolbar-btn-group hidden lg:flex" role="group" aria-label="Logout">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
