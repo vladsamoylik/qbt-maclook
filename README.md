@@ -10,10 +10,11 @@ This theme was created because there were no simple, lightweight alternative the
 
 ### Appearance
 
-- **macOS design language**: Rounded controls (18px radius), elevated shadows, SF-style typography
-- **Light and dark themes**: Automatic switching with system preference or manual selection
-- **Finder-style table**: Zebra stripes, rounded rows, consistent row height across viewports
-- **Unified toolbar**: Compact button groups with dividers, consistent spacing
+- **macOS 27 Liquid Glass**: Capsule controls in a medium glass material, specular edges, and a press response. Sheets, menus, and the inspector use the regular (more opaque) variant so text stays readable
+- **Light and dark themes**: Follow the system appearance, with solid fallbacks when Reduce Transparency is on
+- **Content layer**: Taller rows, title-case column titles, and a system-blue selection. Grouped settings stay on a standard material instead of glass
+- **Concentric corners**: Sheets use a 28px radius; nested groups and menu items sit inside that curve
+- **Unified toolbar**: Related actions share one glass capsule; search is its own capsule. Scroll content fades under the bar
 - **Responsive layout**: Mobile-first with tablet and desktop optimizations; unified padding and font sizes across breakpoints
 
 ### Functionality

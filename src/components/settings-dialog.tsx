@@ -121,7 +121,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           /* Mobile: full viewport, edge-to-edge */
           "!inset-0 !left-0 !top-0 !right-0 !bottom-0 !w-full !h-full !translate-x-0 !translate-y-0 !rounded-none",
           /* Desktop: centered window */
-          "sm:!inset-auto sm:!left-1/2 sm:!top-1/2 sm:!right-auto sm:!bottom-auto sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:!w-[95vw] sm:!max-w-[680px] sm:!h-[min(90dvh,800px)] sm:!rounded-[20px] sm:!p-0 sm:pt-0 sm:pb-0 sm:pl-0 sm:pr-0"
+          "sm:!inset-auto sm:!left-1/2 sm:!top-1/2 sm:!right-auto sm:!bottom-auto sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:!w-[95vw] sm:!max-w-[680px] sm:!h-[min(90dvh,800px)] sm:!rounded-[var(--radius-sheet)] sm:!p-0 sm:pt-0 sm:pb-0 sm:pl-0 sm:pr-0"
         )}
       >
         <DialogTitle className="sr-only">Options</DialogTitle>
@@ -153,26 +153,23 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 </div>
                 <div className="settings-dialog-footer-overlay">
                   {error && <p className="settings-content-frame pb-2 text-body-sm text-destructive">{error}</p>}
-                  <div className="settings-dialog-footer flex justify-end settings-content-frame pt-4 pb-3 sm:pt-5 sm:pb-3">
-                    <div className="toolbar-btn-group h-10" role="group">
-                      <button
-                        type="button"
-                        onClick={() => onOpenChange(false)}
-                        disabled={saving}
-                        className="flex h-full items-center px-4 text-label"
-                      >
-                        Cancel
-                      </button>
-                      <div className="toolbar-btn-group-divider" aria-hidden="true" />
-                      <button
-                        type="button"
-                        onClick={handleSave}
-                        disabled={saving || isLoading}
-                        className="flex h-full items-center px-4 text-label text-primary"
-                      >
-                        {saving ? "Saving..." : "Save"}
-                      </button>
-                    </div>
+                  <div className="settings-dialog-footer dialog-actions settings-content-frame pt-4 pb-3 sm:pt-5 sm:pb-3">
+                    <button
+                      type="button"
+                      onClick={() => onOpenChange(false)}
+                      disabled={saving}
+                      className="glass-btn"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      disabled={saving || isLoading}
+                      className="glass-btn glass-btn-prominent"
+                    >
+                      {saving ? "Saving..." : "Save"}
+                    </button>
                   </div>
                 </div>
                 <ScrollArea type="scroll" scrollHideDelay={500} className="absolute inset-0 z-0 settings-content-scroll">
@@ -201,9 +198,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="settings-select dropdown-menu-content !py-1.5 !px-4 w-64 min-w-64 [&>button]:hidden">
-                            <SelectItem value="system" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">System</SelectItem>
-                            <SelectItem value="light" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Light</SelectItem>
-                            <SelectItem value="dark" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Dark</SelectItem>
+                            <SelectItem value="system" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">System</SelectItem>
+                            <SelectItem value="light" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Light</SelectItem>
+                            <SelectItem value="dark" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Dark</SelectItem>
                           </SelectContent>
                         </Select>
                       </SettingsField>
@@ -468,12 +465,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="settings-select dropdown-menu-content !py-1.5 !px-4 w-64 min-w-64 [&>button]:hidden">
-                            <SelectItem value="-1" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Disabled</SelectItem>
-                            <SelectItem value="1" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">HTTP</SelectItem>
-                            <SelectItem value="2" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">SOCKS5</SelectItem>
-                            <SelectItem value="3" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">HTTP (auth)</SelectItem>
-                            <SelectItem value="4" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">SOCKS5 (auth)</SelectItem>
-                            <SelectItem value="5" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">SOCKS4</SelectItem>
+                            <SelectItem value="-1" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Disabled</SelectItem>
+                            <SelectItem value="1" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">HTTP</SelectItem>
+                            <SelectItem value="2" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">SOCKS5</SelectItem>
+                            <SelectItem value="3" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">HTTP (auth)</SelectItem>
+                            <SelectItem value="4" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">SOCKS5 (auth)</SelectItem>
+                            <SelectItem value="5" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">SOCKS4</SelectItem>
                           </SelectContent>
                         </Select>
                       </SettingsField>
@@ -680,16 +677,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="settings-select dropdown-menu-content !py-1.5 !px-4 w-64 min-w-64 [&>button]:hidden">
-                                <SelectItem value="0" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Every day</SelectItem>
-                                <SelectItem value="1" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Weekdays</SelectItem>
-                                <SelectItem value="2" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Weekends</SelectItem>
-                                <SelectItem value="3" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Monday</SelectItem>
-                                <SelectItem value="4" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Tuesday</SelectItem>
-                                <SelectItem value="5" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Wednesday</SelectItem>
-                                <SelectItem value="6" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Thursday</SelectItem>
-                                <SelectItem value="7" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Friday</SelectItem>
-                                <SelectItem value="8" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Saturday</SelectItem>
-                                <SelectItem value="9" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">Sunday</SelectItem>
+                                <SelectItem value="0" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Every day</SelectItem>
+                                <SelectItem value="1" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Weekdays</SelectItem>
+                                <SelectItem value="2" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Weekends</SelectItem>
+                                <SelectItem value="3" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Monday</SelectItem>
+                                <SelectItem value="4" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Tuesday</SelectItem>
+                                <SelectItem value="5" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Wednesday</SelectItem>
+                                <SelectItem value="6" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Thursday</SelectItem>
+                                <SelectItem value="7" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Friday</SelectItem>
+                                <SelectItem value="8" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Saturday</SelectItem>
+                                <SelectItem value="9" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">Sunday</SelectItem>
                               </SelectContent>
                             </Select>
                           </SettingsField>
@@ -825,13 +822,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="settings-select dropdown-menu-content !py-1.5 !px-4 w-64 min-w-64 [&>button]:hidden">
-                            <SelectItem value="0" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">
+                            <SelectItem value="0" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">
                               Prefer encryption
                             </SelectItem>
-                            <SelectItem value="1" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">
+                            <SelectItem value="1" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">
                               Force encryption on
                             </SelectItem>
-                            <SelectItem value="2" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">
+                            <SelectItem value="2" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">
                               Force encryption off
                             </SelectItem>
                           </SelectContent>
@@ -846,9 +843,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="settings-select dropdown-menu-content !py-1.5 !px-4 w-64 min-w-64 [&>button]:hidden">
-                            <SelectItem value="0" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">TCP and μTP</SelectItem>
-                            <SelectItem value="1" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">TCP only</SelectItem>
-                            <SelectItem value="2" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">μTP only</SelectItem>
+                            <SelectItem value="0" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">TCP and μTP</SelectItem>
+                            <SelectItem value="1" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">TCP only</SelectItem>
+                            <SelectItem value="2" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">μTP only</SelectItem>
                           </SelectContent>
                         </Select>
                       </SettingsField>
@@ -900,10 +897,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="settings-select dropdown-menu-content !py-1.5 !px-4 w-64 min-w-64 [&>button]:hidden">
-                                <SelectItem value="0" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">
+                                <SelectItem value="0" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">
                                   Pause torrent
                                 </SelectItem>
-                                <SelectItem value="1" className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm">
+                                <SelectItem value="1" className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm">
                                   Remove torrent
                                 </SelectItem>
                               </SelectContent>

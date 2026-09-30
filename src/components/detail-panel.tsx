@@ -115,10 +115,10 @@ function FilesTab({ hash }: { hash: string }) {
         <div className="p-4">
           <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-files" role="grid">
             <div className="finder-table-header" role="row">
-              <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">#</div>
-              <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Name</div>
-              <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Size</div>
-              <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Progress</div>
+              <div className="finder-table-header-cell px-3 py-1.5 column-label">#</div>
+              <div className="finder-table-header-cell min-w-0 px-3 py-1.5 column-label">Name</div>
+              <div className="finder-table-header-cell px-3 py-2 text-right column-label">Size</div>
+              <div className="finder-table-header-cell px-3 py-2 text-right column-label">Progress</div>
             </div>
             <div className="finder-table-body">
               {files.map((file: TorrentFile) => (
@@ -161,12 +161,12 @@ function PeersTab({ hash }: { hash: string }) {
       <div className="p-4">
         <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-peers" role="grid">
           <div className="finder-table-header" role="row">
-            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">IP</div>
-            <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Client</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Down</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Up</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Progress</div>
-            <div className="finder-table-header-cell px-3 py-2 text-center text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Type</div>
+            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 column-label">IP</div>
+            <div className="finder-table-header-cell px-3 py-1.5 column-label">Client</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right column-label">Down</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right column-label">Up</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right column-label">Progress</div>
+            <div className="finder-table-header-cell px-3 py-2 text-center column-label">Type</div>
           </div>
           <div className="finder-table-body">
             {peers.map((peer: TorrentPeer, i: number) => (
@@ -210,11 +210,11 @@ function TrackersTab({ hash }: { hash: string }) {
       <div className="p-4">
         <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-trackers" role="grid">
           <div className="finder-table-header" role="row">
-            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">URL</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Seeds</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Peers</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Leeches</div>
-            <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Status</div>
+            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 column-label">URL</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right column-label">Seeds</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right column-label">Peers</div>
+            <div className="finder-table-header-cell px-3 py-2 text-right column-label">Leeches</div>
+            <div className="finder-table-header-cell px-3 py-1.5 column-label">Status</div>
           </div>
           <div className="finder-table-body">
             {trackers.map((tracker: TorrentTracker, i: number) => (
@@ -273,18 +273,18 @@ export function DetailPanel() {
         </div>
       )}
       <Tabs defaultValue="general" className="flex flex-1 flex-col overflow-hidden">
-        <div className="finder-table-header px-4">
-          <TabsList className="h-9 bg-transparent p-0 gap-0">
-            <TabsTrigger value="general" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+        <div className="inspector-tabbar">
+          <TabsList className="inspector-tabs">
+            <TabsTrigger value="general" className="inspector-tab">
               General
             </TabsTrigger>
-            <TabsTrigger value="files" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+            <TabsTrigger value="files" className="inspector-tab">
               Files
             </TabsTrigger>
-            <TabsTrigger value="peers" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+            <TabsTrigger value="peers" className="inspector-tab">
               Peers
             </TabsTrigger>
-            <TabsTrigger value="trackers" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+            <TabsTrigger value="trackers" className="inspector-tab">
               Trackers
             </TabsTrigger>
           </TabsList>

@@ -36,15 +36,13 @@ body {
   }
 
   /**
-   * Design system: controls and surfaces (use vars from :root / .dark)
-   * Tokens: --surface-bg, --surface-bg-hover, --dialog-bg, --control-hover,
-   * --control-active-bg, --control-divider, --nav-item-active-bg,
-   * --scrollbar-track, --scrollbar-track-hover, --slider-track
-   * Classes: .elevated-surface-shadow, .control-hover, .control-active
-   *
-   * Single control group (reused everywhere): .toolbar-btn-group + .toolbar-btn-group-divider
-   * + .toolbar-btn-group-icon-only. Used in: main toolbar, settings header/footer,
-   * add/delete dialogs. Dark theme icons (including <img>) are forced white inside.
+   * macOS 27 (Golden Gate) — medium Liquid Glass.
+   * Functional layer (toolbars, search, menus, sheets, inspectors): translucent
+   * glass with blur, specular edge, and a press response.
+   * Content layer (lists, grouped forms): opaque standard materials.
+   * Small controls are capsules. Nested corners use --radius-sheet / --radius-section
+   * so inner shapes stay concentric with their container.
+   * Tokens: --glass-bg, --glass-shadow, --grouped-bg, --sheet-bg, --radius-*.
    */
 
   /* Shared elevated surface shadow */
@@ -62,35 +60,37 @@ body {
     color: hsl(var(--primary)) !important;
   }
 
-  /* === Buttons: single and group (use --surface-bg, --toolbar-shadow) === */
+  /* === Buttons: single and group — regular Liquid Glass capsules === */
   .toolbar-btn {
-    border-radius: 18px;
-    background-color: var(--surface-bg);
+    border-radius: var(--radius-control);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border: none;
-    box-shadow: var(--toolbar-shadow);
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.16s ease;
   }
 
   .toolbar-btn:hover:not(:disabled) {
-    background-color: var(--surface-bg-hover);
+    background: var(--glass-bg-hover);
   }
 
-  .dark .toolbar-btn {
-    box-shadow: var(--toolbar-shadow);
-  }
-
-  .dark .toolbar-btn:hover:not(:disabled) {
-    background-color: var(--surface-bg-hover);
+  .toolbar-btn:active:not(:disabled) {
+    transform: scale(0.97);
   }
 
   .toolbar-btn-group {
     display: flex;
     align-items: center;
     height: 2.5rem;
-    border-radius: 18px;
+    border-radius: var(--radius-control);
     overflow: hidden;
     border: none;
-    background-color: var(--surface-bg);
-    box-shadow: var(--toolbar-shadow);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .toolbar-btn-group .toolbar-btn-group-divider {
@@ -98,10 +98,6 @@ body {
     height: 1.25rem;
     background-color: var(--control-divider);
     flex-shrink: 0;
-  }
-
-  .dark .toolbar-btn-group {
-    box-shadow: var(--toolbar-shadow);
   }
 
   .toolbar-btn-group button {
@@ -127,15 +123,20 @@ body {
   }
 
   .toolbar-btn-group>button:first-child {
-    border-radius: 18px 0 0 18px;
+    border-radius: var(--radius-control) 0 0 var(--radius-control);
   }
 
   .toolbar-btn-group>button:last-child {
-    border-radius: 0 18px 18px 0;
+    border-radius: 0 var(--radius-control) var(--radius-control) 0;
   }
 
   .toolbar-btn-group>button:only-child {
-    border-radius: 18px;
+    border-radius: var(--radius-control);
+  }
+
+  /* Interactive glass: the whole capsule compresses when a segment is pressed. */
+  .toolbar-btn-group:has(button:active:not(:disabled)) {
+    transform: scale(0.975);
   }
 
   .toolbar-btn-group button.toolbar-btn-group-icon-only::before {
@@ -180,12 +181,14 @@ body {
     }
   }
 
-  /* === Text inputs (search, form fields) === */
+  /* === Search field: Liquid Glass capsule in the toolbar === */
   .toolbar-input {
-    border-radius: 18px;
-    background-color: var(--surface-bg) !important;
+    border-radius: var(--radius-control) !important;
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border: none !important;
-    box-shadow: var(--toolbar-shadow);
+    box-shadow: var(--glass-shadow);
     --tw-ring-shadow: 0 0 0 0;
   }
 
@@ -195,9 +198,11 @@ body {
     align-items: center;
     width: 100%;
     min-height: 2.5rem;
-    border-radius: 18px;
-    background-color: var(--surface-bg);
-    box-shadow: var(--toolbar-shadow);
+    border-radius: var(--radius-control);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow);
   }
 
   .login-bar-input {
@@ -294,61 +299,39 @@ body {
 
     /* Match button corners to container to prevent hover background artifact */
     .login-bar .login-bar-btn {
-      border-radius: 0 0 18px 18px;
+      border-radius: 0 0 var(--radius-control) var(--radius-control);
     }
   }
 
   .toolbar-input:focus,
   .toolbar-input:focus-visible {
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow) !important;
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.28), var(--glass-shadow) !important;
     outline: none;
   }
 
-  .dark .toolbar-input {
-    box-shadow: var(--toolbar-shadow);
-  }
-
-  .dark .toolbar-input:focus,
-  .dark .toolbar-input:focus-visible {
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow) !important;
-    outline: none;
-  }
-
+  /* Form fields sit in the content layer: inset fill, not a second glass control. */
   .input-macos:not(.toolbar-input) {
-    border-radius: 18px !important;
-    background-color: var(--surface-bg) !important;
+    border-radius: var(--radius-control) !important;
+    background: var(--field-bg) !important;
     border: none !important;
-    box-shadow: var(--toolbar-shadow);
+    box-shadow: var(--field-shadow);
     --tw-ring-shadow: 0 0 0 0;
   }
 
   .input-macos:not(.toolbar-input):focus,
   .input-macos:not(.toolbar-input):focus-visible {
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow) !important;
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.28), var(--field-shadow) !important;
     outline: none;
   }
 
-  .dark .input-macos:not(.toolbar-input) {
-    box-shadow: var(--toolbar-shadow);
-  }
-
-  .dark .input-macos:not(.toolbar-input):focus,
-  .dark .input-macos:not(.toolbar-input):focus-visible {
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow) !important;
-    outline: none;
-  }
-
-  /* === Sidebar panels === */
+  /* === Sidebar / inspector — regular Liquid Glass (more opaque, text-heavy) === */
   .sidebar-surface {
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    background-color: var(--surface-bg);
-    box-shadow: var(--elevated-shadow);
-  }
-
-  .dark .sidebar-surface {
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: var(--elevated-shadow);
+    border-radius: var(--radius-section);
+    border: none;
+    background: var(--sheet-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow);
   }
 
   /* Sidebar nav selection - neutral row bg, text = primary */
@@ -357,25 +340,24 @@ body {
     color: hsl(var(--primary)) !important;
   }
 
-  /* Sidebar section headers - same font/color as table header, capitalize */
-  .sidebar-section-header {
-    font-size: 0.6875rem;
+  /* Section headers: title case, not small-caps. Matches the HIG list/table update. */
+  .sidebar-section-header,
+  .column-label {
+    font-size: 0.75rem;
     line-height: 1.35;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    font-weight: 590;
+    letter-spacing: -0.011em;
+    text-transform: none;
     color: hsl(var(--muted-foreground));
   }
 
   .detail-panel-surface {
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    background-color: var(--surface-bg);
-    box-shadow: var(--toolbar-shadow);
-  }
-
-  .dark .detail-panel-surface {
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: var(--toolbar-shadow);
+    border-radius: var(--radius-sheet);
+    border: none;
+    background: var(--sheet-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--dialog-shadow);
   }
 
   /* Detail panel divider - subtle, matches finder-table-header */
@@ -390,46 +372,78 @@ body {
 
 @layer base {
   :root {
-    /* Design tokens: elevated surfaces (buttons, inputs, groups, dialogs) */
-    --surface-bg: #f8f8f8;
-    --surface-bg-hover: hsl(0 0% 95%);
-    --surface-bg-active: hsl(0 0% 93%);
-    /* Dialog/popover background - matches site (--card) for sync */
-    --dialog-bg: hsl(var(--card));
-    /* Control states (hover overlay, active bg, dividers) */
+    /* Concentric radii: capsules for controls, larger sheets, nested sections. */
+    --radius-control: 999px;
+    --radius-sheet: 28px;
+    --radius-section: 16px;
+    --radius-row: 12px;
+    --radius-menu: 16px;
+    --radius-menu-item: 8px;
+
+    /* Medium Liquid Glass (macOS 27 default). Regular variant keeps text legible. */
+    --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.5) 100%);
+    --glass-bg-hover: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.64) 100%);
+    --glass-blur: blur(24px) saturate(1.8);
+    --glass-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -0.5px 0 rgba(0, 0, 0, 0.05),
+      0 0 0 0.5px rgba(0, 0, 0, 0.08),
+      0 1px 1px rgba(0, 0, 0, 0.04),
+      0 10px 24px rgba(0, 0, 0, 0.08);
+    --prominent-bg: linear-gradient(180deg, hsl(211 100% 60%) 0%, hsl(211 100% 46%) 100%);
+    --prominent-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 -0.5px 0 rgba(0, 0, 0, 0.15),
+      0 0 0 0.5px hsl(211 100% 36% / 0.4),
+      0 8px 18px hsl(211 100% 42% / 0.28);
+    --destructive-bg: linear-gradient(180deg, hsl(3 84% 60%) 0%, hsl(0 72% 48%) 100%);
+    --destructive-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 0 0 0.5px hsl(0 70% 36% / 0.35),
+      0 8px 18px hsl(0 72% 42% / 0.22);
+    --sheet-bg: linear-gradient(180deg, rgba(250, 250, 252, 0.92) 0%, rgba(242, 242, 246, 0.86) 100%);
+    --field-bg: rgba(255, 255, 255, 0.72);
+    --field-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.1), inset 0 1px 1.5px rgba(0, 0, 0, 0.04);
+    --grouped-bg: rgba(255, 255, 255, 0.72);
+    --grouped-edge: rgba(0, 0, 0, 0.06);
+    --window-bg: #e7e7ec;
+
+    --surface-bg: rgba(255, 255, 255, 0.62);
+    --surface-bg-hover: rgba(255, 255, 255, 0.8);
+    --surface-bg-active: rgba(255, 255, 255, 0.9);
+    --dialog-bg: rgba(246, 246, 248, 0.92);
     --control-hover: rgba(0, 0, 0, 0.06);
-    --control-active-bg: hsl(var(--primary) / 0.15);
-    /* Nav item selected state (neutral bg + primary text, e.g. sidebar) */
-    --nav-item-active-bg: hsl(0 0% 90%);
+    --control-active-bg: hsl(211 100% 50% / 0.16);
+    --nav-item-active-bg: rgba(0, 0, 0, 0.06);
     --control-divider: rgba(0, 0, 0, 0.12);
-    /* Scrollbar track */
-    --scrollbar-track: hsl(0 0% 68%);
-    --scrollbar-track-hover: hsl(0 0% 55%);
-    /* Slider track (distinct from input for contrast) */
-    --slider-track: hsl(0 0% 72%);
-    /* Light theme: white contour + shadow for elevated elements */
-    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 8px 24px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.05);
-    /* Deeper shadow for modal dialogs (Add, Delete, Settings) */
-    --dialog-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 12px 24px -8px rgba(0, 0, 0, 0.15);
-    --background: 240 5% 96%;
-    --foreground: 0 0% 9%;
-    --card: 240 5% 96%;
-    --card-foreground: 0 0% 9%;
-    --popover: 240 5% 96%;
-    --popover-foreground: 0 0% 9%;
+    --scrollbar-track: hsl(240 4% 62%);
+    --scrollbar-track-hover: hsl(240 4% 48%);
+    --slider-track: rgba(0, 0, 0, 0.12);
+    --elevated-shadow: var(--glass-shadow);
+    --toolbar-shadow: var(--glass-shadow);
+    --dialog-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 0 0 0.5px rgba(0, 0, 0, 0.08),
+      0 24px 60px -12px rgba(0, 0, 0, 0.28),
+      0 8px 20px -8px rgba(0, 0, 0, 0.12);
+    --background: 240 6% 93%;
+    --foreground: 240 6% 10%;
+    --card: 240 8% 93%;
+    --card-foreground: 240 6% 10%;
+    --popover: 240 10% 98%;
+    --popover-foreground: 240 6% 10%;
     --primary: 211 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 92%;
-    --secondary-foreground: 0 0% 18%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 38%;
-    --accent: 0 0% 92%;
-    --accent-foreground: 0 0% 6%;
+    --secondary: 240 6% 92%;
+    --secondary-foreground: 240 4% 18%;
+    --muted: 240 5% 90%;
+    --muted-foreground: 240 3% 40%;
+    --accent: 240 6% 92%;
+    --accent-foreground: 240 6% 8%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 88%;
-    --input: 0 0% 88%;
+    --border: 240 4% 84%;
+    --input: 240 4% 84%;
     --ring: 211 100% 50%;
     --chart-1: 211 100% 50%;
     --chart-2: 142 71% 45%;
@@ -452,40 +466,67 @@ body {
   }
 
   .dark {
-    /* Cool gray: blue tint (hue 220), clearly cold */
-    --surface-bg: hsl(220, 8%, 10%);
-    --surface-bg-hover: hsl(220, 8%, 12%);
-    --surface-bg-active: hsl(220, 8%, 14%);
-    /* --dialog-bg inherits from --card in .dark */
-    --control-hover: rgba(255, 255, 255, 0.06);
-    --control-active-bg: hsl(var(--primary) / 0.25);
-    --nav-item-active-bg: hsl(220 8% 20%);
-    --control-divider: rgba(255, 255, 255, 0.1);
-    --scrollbar-track: hsl(220 6% 38%);
-    --scrollbar-track-hover: hsl(220 6% 48%);
-    --slider-track: hsl(220 6% 28%);
-    --elevated-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 6px 20px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.12);
-    --toolbar-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 6px 20px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
-    --dialog-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 25px 60px -12px rgba(0, 0, 0, 0.5), 0 16px 32px -8px rgba(0, 0, 0, 0.35);
-    --background: 220 10% 8%;
-    --foreground: 220 6% 94%;
-    --card: 220 8% 14%;
-    --card-foreground: 220 6% 94%;
-    --popover: 220 8% 14%;
-    --popover-foreground: 220 6% 94%;
-    --primary: 211 100% 50%;
+    --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.07) 100%);
+    --glass-bg-hover: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.1) 100%);
+    --glass-blur: blur(28px) saturate(1.6);
+    --glass-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -0.5px 0 rgba(0, 0, 0, 0.35),
+      0 0 0 0.5px rgba(255, 255, 255, 0.1),
+      0 10px 28px rgba(0, 0, 0, 0.35);
+    --prominent-bg: linear-gradient(180deg, hsl(211 100% 62%) 0%, hsl(211 100% 46%) 100%);
+    --prominent-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 0 0 0.5px rgba(0, 0, 0, 0.4),
+      0 8px 20px rgba(0, 80, 180, 0.35);
+    --destructive-bg: linear-gradient(180deg, hsl(3 78% 58%) 0%, hsl(0 68% 44%) 100%);
+    --destructive-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 8px 20px rgba(120, 20, 20, 0.35);
+    --sheet-bg: linear-gradient(180deg, rgba(48, 48, 52, 0.9) 0%, rgba(32, 32, 36, 0.86) 100%);
+    --field-bg: rgba(255, 255, 255, 0.08);
+    --field-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.12), inset 0 1px 1.5px rgba(0, 0, 0, 0.25);
+    --grouped-bg: rgba(255, 255, 255, 0.06);
+    --grouped-edge: rgba(255, 255, 255, 0.08);
+    --window-bg: #141416;
+
+    --surface-bg: rgba(255, 255, 255, 0.08);
+    --surface-bg-hover: rgba(255, 255, 255, 0.12);
+    --surface-bg-active: rgba(255, 255, 255, 0.16);
+    --dialog-bg: rgba(36, 36, 40, 0.9);
+    --control-hover: rgba(255, 255, 255, 0.08);
+    --control-active-bg: hsl(211 100% 56% / 0.28);
+    --nav-item-active-bg: rgba(255, 255, 255, 0.1);
+    --control-divider: rgba(255, 255, 255, 0.12);
+    --scrollbar-track: hsl(240 3% 40%);
+    --scrollbar-track-hover: hsl(240 3% 52%);
+    --slider-track: rgba(255, 255, 255, 0.16);
+    --elevated-shadow: var(--glass-shadow);
+    --toolbar-shadow: var(--glass-shadow);
+    --dialog-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 0 0 0.5px rgba(255, 255, 255, 0.08),
+      0 28px 70px -16px rgba(0, 0, 0, 0.65),
+      0 10px 24px -8px rgba(0, 0, 0, 0.4);
+    --background: 240 4% 9%;
+    --foreground: 240 6% 96%;
+    --card: 240 4% 11%;
+    --card-foreground: 240 6% 96%;
+    --popover: 240 4% 16%;
+    --popover-foreground: 240 6% 96%;
+    --primary: 211 100% 56%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 8% 20%;
-    --secondary-foreground: 220 6% 82%;
-    --muted: 220 8% 20%;
-    --muted-foreground: 220 5% 62%;
-    --accent: 220 8% 20%;
-    --accent-foreground: 220 6% 94%;
-    --destructive: 0 72% 51%;
+    --secondary: 240 4% 18%;
+    --secondary-foreground: 240 5% 86%;
+    --muted: 240 4% 18%;
+    --muted-foreground: 240 4% 68%;
+    --accent: 240 4% 18%;
+    --accent-foreground: 240 6% 96%;
+    --destructive: 0 72% 56%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 6% 28%;
-    --input: 220 6% 28%;
-    --ring: 211 100% 50%;
+    --border: 240 3% 26%;
+    --input: 240 3% 26%;
+    --ring: 211 100% 56%;
     --chart-1: 211 100% 60%;
     --chart-2: 142 71% 55%;
     --chart-3: 38 92% 60%;
@@ -520,11 +561,24 @@ body {
   }
 
   body {
-    background-color: hsl(var(--card));
     color: hsl(var(--foreground));
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -moz-osx-font-smoothing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--window-bg);
+    background-image:
+      radial-gradient(980px 460px at 8% -10%, rgba(255, 255, 255, 0.95), transparent 52%),
+      radial-gradient(820px 480px at 100% -6%, rgba(176, 198, 255, 0.55), transparent 48%),
+      radial-gradient(640px 360px at 78% 110%, rgba(255, 196, 176, 0.28), transparent 46%),
+      linear-gradient(180deg, #f3f3f6 0%, #e4e4e9 100%);
+  }
+
+  .dark body {
+    background-color: var(--window-bg);
+    background-image:
+      radial-gradient(900px 420px at 0% -8%, rgba(90, 130, 230, 0.28), transparent 55%),
+      radial-gradient(700px 380px at 100% 0%, rgba(190, 100, 80, 0.16), transparent 50%),
+      linear-gradient(180deg, #1c1c20 0%, #101012 100%);
   }
 }
 
@@ -560,10 +614,13 @@ body {
 }
 
 .finder-table-header .finder-table-header-cell {
-  height: 2rem;
-  max-height: 2rem;
+  height: 2.125rem;
+  max-height: 2.125rem;
   box-sizing: border-box;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
+  font-weight: 590;
+  letter-spacing: -0.011em;
+  text-transform: none;
 }
 
 .dark .finder-table-header {
@@ -664,11 +721,11 @@ body {
 }
 
 .detail-panel-surface .finder-table-grid .finder-table-row .finder-table-cell:first-child {
-  border-radius: 11px 0 0 11px;
+  border-radius: var(--radius-row) 0 0 var(--radius-row);
 }
 
 .detail-panel-surface .finder-table-grid .finder-table-row .finder-table-cell:last-child {
-  border-radius: 0 11px 11px 0;
+  border-radius: 0 var(--radius-row) var(--radius-row) 0;
 }
 
 /* Stacking: selected row (div) renders above siblings */
@@ -682,8 +739,8 @@ body {
 .finder-table-row .finder-table-cell {
   display: flex;
   align-items: center;
-  min-height: 2.25rem;
-  height: 2.25rem;
+  min-height: 2.625rem;
+  height: 2.625rem;
   font-size: 0.9375rem;
   line-height: 1.45;
   overflow: hidden;
@@ -707,20 +764,20 @@ body {
   min-width: 0;
 }
 
-/* Row rounding - row has background */
+/* Row rounding - row has background. Larger radius and height per the list refresh. */
 .finder-table-row {
-  border-radius: 11px;
+  border-radius: var(--radius-row);
   scroll-margin-top: 2rem;
 }
 
-/* First cell: left side rounded so blue selection border follows the curve */
+/* First cell: left side rounded so selection follows the curve */
 .finder-table-row .finder-table-cell:first-child {
-  border-radius: 11px 0 0 11px;
+  border-radius: var(--radius-row) 0 0 var(--radius-row);
 }
 
 /* Last visible cell: right side rounded (varies by breakpoint) */
 .finder-table-row .finder-table-cell:nth-child(3) {
-  border-radius: 0 11px 11px 0;
+  border-radius: 0 var(--radius-row) var(--radius-row) 0;
 }
 
 @media (min-width: 1024px) {
@@ -728,7 +785,7 @@ body {
     border-radius: 0;
   }
   .finder-table-row .finder-table-cell:nth-child(4) {
-    border-radius: 0 11px 11px 0;
+    border-radius: 0 var(--radius-row) var(--radius-row) 0;
   }
 }
 
@@ -737,7 +794,7 @@ body {
     border-radius: 0;
   }
   .finder-table-row .finder-table-cell:last-child {
-    border-radius: 0 11px 11px 0;
+    border-radius: 0 var(--radius-row) var(--radius-row) 0;
   }
 }
 
@@ -753,19 +810,20 @@ body {
 }
 
 .finder-table-row:nth-child(even) {
-  background: hsl(0 0% 93%);
+  background: rgba(0, 0, 0, 0.035);
 }
 
 .finder-table-row:hover {
-  background: hsl(0 0% 93%) !important;
+  background: rgba(0, 0, 0, 0.055) !important;
 }
 
 .finder-table-row.finder-table-row-selected,
 .finder-table-row.finder-table-row-selected:hover {
-  background: #0064e1 !important;
+  background: #007aff !important;
   color: #fff !important;
   position: relative;
   z-index: 2;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .finder-table-row.finder-table-row-selected *,
@@ -787,19 +845,20 @@ body {
 }
 
 .dark .finder-table-row:nth-child(even) {
-  background: hsl(220 8% 18%);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .dark .finder-table-row:hover {
-  background: hsl(220 8% 22%) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
 }
 
 .dark .finder-table-row.finder-table-row-selected,
 .dark .finder-table-row.finder-table-row-selected:hover {
-  background: #0064e1 !important;
+  background: #0a84ff !important;
   color: #fff !important;
   position: relative;
   z-index: 2;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 /* Safari: remove focus ring, semicircle, tap highlight; prevent overlap on right */
@@ -834,34 +893,31 @@ body {
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2);
 }
 
-/* Menus and tooltips - background #f5f5f5 in light theme */
+/* Menus and tooltips — regular Liquid Glass, concentric item radius */
 .dropdown-menu-content,
 [role="tooltip"] {
-  background-color: #f5f5f5 !important;
+  background: var(--sheet-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
 }
 
 /* Tooltip - same border and shadow as menu */
 [role="tooltip"] {
-  border: 1px solid rgba(0, 0, 0, 0.108) !important;
-  border-radius: 11px !important;
-  box-shadow:
-    0 10px 25px -5px rgb(0 0 0 / 0.225),
-    0 8px 10px -6px rgb(0 0 0 / 0.18),
-    0 4px 6px -4px rgb(0 0 0 / 0.126) !important;
+  border: none !important;
+  border-radius: var(--radius-menu) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: hsl(var(--foreground)) !important;
 }
 
 .dark .dropdown-menu-content {
-  background-color: hsl(var(--card)) !important;
+  background: var(--sheet-bg) !important;
 }
 
-/* Tooltip - GitHub dark style: lighter bg, same border and shadow as menu */
 .dark [role="tooltip"] {
-  background-color: #21262d !important;
-  color: #e6edf3 !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  box-shadow:
-    0 12px 32px -8px rgb(0 0 0 / 0.45),
-    0 8px 16px -8px rgb(0 0 0 / 0.35) !important;
+  background: var(--sheet-bg) !important;
+  color: hsl(var(--foreground)) !important;
+  border: none !important;
+  box-shadow: var(--glass-shadow) !important;
 }
 
 /* Dropdown menu - macOS style, #56a1ff selection, normal weight, icons on left, deeper shadow */
@@ -870,19 +926,14 @@ body {
   flex-direction: column;
   gap: 1px;
   padding: 6px !important;
-  border-radius: 11px !important;
-  border: 1px solid rgba(0, 0, 0, 0.108) !important;
-  box-shadow:
-    0 10px 25px -5px rgb(0 0 0 / 0.225),
-    0 8px 10px -6px rgb(0 0 0 / 0.18),
-    0 4px 6px -4px rgb(0 0 0 / 0.126) !important;
+  border-radius: var(--radius-menu) !important;
+  border: none !important;
+  box-shadow: var(--glass-shadow) !important;
 }
 
 .dark .dropdown-menu-content {
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  box-shadow:
-    0 12px 32px -8px rgb(0 0 0 / 0.45),
-    0 8px 16px -8px rgb(0 0 0 / 0.35) !important;
+  border: none !important;
+  box-shadow: var(--glass-shadow) !important;
 }
 
 .dropdown-menu-item {
@@ -928,7 +979,9 @@ body {
 
 /* === Dialog windows: Add, Delete, Settings - unified class, deeper shadow === */
 .settings-dialog-window {
-  background-color: var(--dialog-bg) !important;
+  background: var(--sheet-bg) !important;
+  backdrop-filter: blur(40px) saturate(1.7);
+  -webkit-backdrop-filter: blur(40px) saturate(1.7);
   border: none !important;
   box-shadow: var(--dialog-shadow) !important;
 }
@@ -1157,8 +1210,15 @@ body {
 }
 
 .settings-dialog-nav-btn-active {
-  background-color: var(--control-active-bg) !important;
-  color: hsl(var(--primary)) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: hsl(var(--foreground)) !important;
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.dark .settings-dialog-nav-btn-active {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: hsl(var(--foreground)) !important;
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.2);
 }
 
 .settings-dialog-nav-btn-active img {
@@ -1200,19 +1260,19 @@ body {
 }
 
 .settings-dialog-footer .toolbar-btn-group {
-  border-radius: 16px;
+  border-radius: var(--radius-control);
 }
 
 .settings-dialog-footer .toolbar-btn-group>button:first-child {
-  border-radius: 16px 0 0 16px;
+  border-radius: var(--radius-control) 0 0 var(--radius-control);
 }
 
 .settings-dialog-footer .toolbar-btn-group>button:last-child {
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
 }
 
 .settings-dialog-footer .toolbar-btn-group>button:only-child {
-  border-radius: 16px;
+  border-radius: var(--radius-control);
 }
 
 /* Settings select - match dropdown-menu-content layout and item style (no icons) */
@@ -1230,15 +1290,15 @@ body {
 
 .settings-select [role="option"] {
   font-weight: 400 !important;
-  border-radius: 9px !important;
-  padding: 4px 12px !important;
+  border-radius: var(--radius-menu-item) !important;
+  padding: 6px 12px !important;
   font-size: 0.9375rem !important;
   line-height: 1.45 !important;
 }
 
 .settings-select [role="option"]:first-child,
 .settings-select [role="option"]:last-child {
-  border-radius: 9px !important;
+  border-radius: var(--radius-menu-item) !important;
 }
 
 .settings-select [role="option"][data-highlighted] {
@@ -1295,10 +1355,10 @@ body {
 /* === Element groups (settings-group, add-transfer-panel) === */
 .settings-group {
   margin-bottom: 24px;
-  border-radius: 14px;
-  background: var(--surface-bg);
+  border-radius: var(--radius-section);
+  background: var(--grouped-bg);
   border: none;
-  box-shadow: var(--toolbar-shadow);
+  box-shadow: inset 0 0 0 0.5px var(--grouped-edge);
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -1309,9 +1369,9 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 16px;
-  border-bottom: 1px solid hsl(var(--border) / 0.4);
-  min-height: 44px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--grouped-edge);
+  min-height: 48px;
 }
 
 .settings-row:last-child {
@@ -1377,41 +1437,46 @@ body {
 
 .add-transfer-panel {
   border: none;
-  box-shadow: var(--toolbar-shadow);
+  box-shadow: inset 0 0 0 0.5px var(--grouped-edge);
+  overflow: hidden;
 }
 
 .add-transfer-tabs {
   display: flex;
   overflow: hidden;
-  background-color: var(--surface-bg) !important;
-}
-
-.dark .add-transfer-tabs {
-  background-color: var(--surface-bg-hover) !important;
+  background: transparent !important;
+  border-radius: var(--radius-section) var(--radius-section) 0 0;
 }
 
 .add-transfer-tab {
-  transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+  transition: background-color 0.15s, color 0.15s;
 }
 
 .add-transfer-tab:hover:not([data-state="active"]) {
   background-color: var(--control-hover);
 }
 
+.add-transfer-tab[data-state="active"] {
+  background: hsl(var(--primary) / 0.14) !important;
+  color: hsl(var(--primary)) !important;
+  box-shadow: none !important;
+}
+
 .add-transfer-dropzone {
-  background-color: var(--surface-bg);
-  border: 2px dashed rgba(0, 0, 0, 0.12);
-  box-shadow: var(--toolbar-shadow);
+  background: var(--field-bg);
+  border: 1.5px dashed rgba(0, 0, 0, 0.16);
+  box-shadow: none;
+  border-radius: calc(var(--radius-section) - 4px);
 }
 
 .add-transfer-dropzone:hover {
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow);
-  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.22);
+  border-color: hsl(var(--primary) / 0.45);
 }
 
 .add-transfer-dropzone:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25), var(--toolbar-shadow);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.28);
 }
 
 .add-transfer-dropzone-has-file {
@@ -1422,16 +1487,16 @@ body {
 .add-transfer-dropzone-dragover {
   border-color: hsl(var(--primary) / 0.6);
   background-color: hsl(var(--primary) / 0.1);
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3);
 }
 
 .dark .add-transfer-dropzone {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 .dark .add-transfer-dropzone:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3), var(--toolbar-shadow);
+  border-color: hsl(var(--primary) / 0.7);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.3);
 }
 
 .dark .add-transfer-dropzone-has-file {
@@ -1442,30 +1507,250 @@ body {
 .dark .add-transfer-dropzone-dragover {
   border-color: hsl(var(--primary) / 0.7);
   background-color: hsl(var(--primary) / 0.15);
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.35), var(--toolbar-shadow);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.35);
 }
 
 /* Slider track and range - distinct colors so they don't blend with background */
 .slider-track {
   background-color: var(--slider-track) !important;
+  height: 0.3rem !important;
 }
 
 .slider-range {
   background-color: hsl(var(--primary)) !important;
 }
 
-/* Slider thumb - deeper shadow for lift */
+/* Slider and switch knobs are Liquid Glass while they can be dragged. */
 .slider-thumb {
   border: none !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f2f2f4 100%) !important;
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.14) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.16) !important;
+}
+
+.slider-thumb:active {
+  transform: scale(1.06);
 }
 
 .dark .slider-thumb {
-  background-color: hsl(0 0% 96%) !important;
+  background: linear-gradient(180deg, #f7f7f8 0%, #d8d8dc 100%) !important;
   border: none !important;
   box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.35),
-    0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Column titles stay in title case even if a utility asks for uppercase. */
+.finder-table-header-cell,
+.finder-table-header-cell button,
+.sidebar-section-header,
+.column-label {
+  text-transform: none !important;
+  letter-spacing: -0.011em !important;
+}
+
+/* Separate dialog actions: regular glass + prominent / destructive. */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  padding: 0 1.15rem;
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  font-weight: 590;
+  letter-spacing: -0.011em;
+  cursor: pointer;
+  transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.16s ease, filter 0.16s ease;
+}
+
+.glass-btn:hover:not(:disabled) {
+  background: var(--glass-bg-hover);
+}
+
+.glass-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.glass-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.35), var(--glass-shadow);
+}
+
+.glass-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.glass-btn-prominent {
+  background: var(--prominent-bg);
+  color: #fff;
+  box-shadow: var(--prominent-shadow);
+}
+
+.glass-btn-prominent:hover:not(:disabled) {
+  filter: brightness(1.05);
+  background: var(--prominent-bg);
+}
+
+.glass-btn-destructive {
+  background: var(--destructive-bg);
+  color: #fff;
+  box-shadow: var(--destructive-shadow);
+}
+
+.glass-btn-destructive:hover:not(:disabled) {
+  filter: brightness(1.05);
+  background: var(--destructive-bg);
+}
+
+/* Inspector segmented control */
+.inspector-tabbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px 8px;
+}
+
+.inspector-tabs {
+  height: 2rem !important;
+  gap: 2px;
+  padding: 2px !important;
+  border-radius: var(--radius-control) !important;
+  background: var(--glass-bg) !important;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.inspector-tab {
+  height: 100%;
+  border-radius: var(--radius-control) !important;
+  border: none !important;
+  padding: 0 0.85rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 590 !important;
+  letter-spacing: -0.011em !important;
+  text-transform: none !important;
+  color: hsl(var(--muted-foreground)) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.inspector-tab[data-state="active"] {
+  background: hsl(var(--primary)) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Toolbar floats on the window; a short fade keeps labels readable over scrolling rows. */
+.window-toolbar {
+  position: relative;
+  z-index: 5;
+  background: transparent;
+}
+
+.window-toolbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -16px;
+  height: 16px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--window-bg) 72%, transparent), transparent);
+}
+
+.status-bar {
+  background: color-mix(in srgb, var(--window-bg) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-top: 0.5px solid var(--grouped-edge) !important;
+}
+
+.switch-thumb {
+  background: linear-gradient(180deg, #ffffff 0%, #f3f3f5 100%) !important;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.12) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolbar-btn,
+  .toolbar-btn-group,
+  .glass-btn,
+  .slider-thumb {
+    transition: none !important;
+  }
+
+  .toolbar-btn:active,
+  .toolbar-btn-group:has(button:active),
+  .glass-btn:active,
+  .slider-thumb:active {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-bg: #f4f4f6;
+    --glass-bg-hover: #ffffff;
+    --sheet-bg: #f6f6f8;
+    --field-bg: #ffffff;
+    --grouped-bg: #ffffff;
+    --glass-blur: none;
+  }
+
+  .dark {
+    --glass-bg: #2c2c30;
+    --glass-bg-hover: #343438;
+    --sheet-bg: #2a2a2e;
+    --field-bg: #1c1c1e;
+    --grouped-bg: #1c1c1e;
+  }
+
+  .toolbar-btn,
+  .toolbar-btn-group,
+  .toolbar-input,
+  .login-bar,
+  .glass-btn,
+  .settings-dialog-window,
+  .detail-panel-surface,
+  .sidebar-surface,
+  .dropdown-menu-content,
+  [role="tooltip"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --glass-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.45),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+    --grouped-edge: rgba(0, 0, 0, 0.45);
+  }
+
+  .dark {
+    --glass-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+      0 1px 2px rgba(0, 0, 0, 0.4);
+    --grouped-edge: rgba(255, 255, 255, 0.55);
+  }
 }
