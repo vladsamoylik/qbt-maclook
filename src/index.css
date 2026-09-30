@@ -167,17 +167,29 @@ body {
     filter: brightness(0) invert(1);
   }
 
-  /* Hide Details toggle on mobile/tablet (below 1280px) - Safari/iOS fallback */
-  @media (max-width: 1279px) {
-    .toolbar-details-mobile-hidden {
+  /*
+   * .toolbar-btn-group sets display:flex later in this layer, which overrides
+   * Tailwind's .hidden. Restore the phone hide, and bring search, settings,
+   * logout, details, and pause-all back from iPad width upward.
+   */
+  @media (max-width: 767px) {
+    .toolbar-btn-group.hidden,
+    .toolbar-details-mobile-hidden,
+    .toolbar-all-mobile-hidden,
+    .toolbar-search {
       display: none !important;
     }
   }
 
-  /* Hide Resume All / Pause All on mobile/tablet (below 1280px) */
-  @media (max-width: 1279px) {
+  @media (min-width: 768px) {
+    .toolbar-btn-group.hidden.lg\:flex,
+    .toolbar-details-mobile-hidden,
     .toolbar-all-mobile-hidden {
-      display: none !important;
+      display: flex !important;
+    }
+
+    .toolbar-search {
+      display: block !important;
     }
   }
 
@@ -195,9 +207,9 @@ body {
   /* === Login bar (composite input) === */
   .login-bar {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     width: 100%;
-    min-height: 2.5rem;
+    min-height: 2.75rem;
     border-radius: var(--radius-control);
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
@@ -206,21 +218,30 @@ body {
   }
 
   .login-bar-input {
-    flex: 1;
+    flex: 1 1 0;
+    align-self: stretch;
+    width: 100%;
     min-width: 0;
-    min-height: 2.75rem;
+    height: 3rem;
+    margin: 0;
     padding: 0 1rem;
     border: none;
+    border-radius: 0;
     background: transparent;
     color: hsl(var(--foreground));
     outline: none;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+    font-size: 16px;
+    line-height: 3rem;
   }
 
   @media (min-width: 640px) {
     .login-bar-input {
-      min-height: 2.5rem;
-      height: 2.5rem;
-      font-size: 0.875rem;
+      height: 2.75rem;
+      line-height: 2.75rem;
+      font-size: 16px;
     }
   }
 
@@ -250,9 +271,10 @@ body {
 
   @media (min-width: 640px) {
     .login-bar-btn {
-      height: 2.5rem;
+      height: auto;
+      min-height: 2.75rem;
       padding: 0 1.25rem;
-      font-size: 0.875rem;
+      font-size: 16px;
     }
   }
 
@@ -286,20 +308,36 @@ body {
   }
 
   @media (max-width: 639px) {
+    /* A full capsule clips the first row. A rounded stack keeps both fields inside the curve. */
+    .login-bar {
+      border-radius: 26px;
+      align-items: stretch;
+    }
+
+    .login-bar-input {
+      width: 100%;
+      flex: 1 1 auto;
+      height: 3rem;
+      line-height: 3rem;
+      padding: 0 1.25rem;
+    }
 
     .login-bar .login-bar-input+.login-bar-divider+.login-bar-input,
     .login-bar .login-bar-divider+.login-bar-btn {
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      border-top: none;
+      box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.08);
     }
 
     .dark .login-bar .login-bar-input+.login-bar-divider+.login-bar-input,
     .dark .login-bar .login-bar-divider+.login-bar-btn {
-      border-top-color: rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
-    /* Match button corners to container to prevent hover background artifact */
     .login-bar .login-bar-btn {
-      border-radius: 0 0 var(--radius-control) var(--radius-control);
+      height: 3rem;
+      min-height: 3rem;
+      padding: 0 1.25rem;
+      border-radius: 0;
     }
   }
 
@@ -688,10 +726,10 @@ body {
   min-width: 0;
 }
 
-/* lg: 3 columns */
+/* lg: name, progress, status */
 @media (min-width: 1024px) {
   .finder-table-grid {
-    grid-template-columns: minmax(0, 1fr) 14ch 14ch;
+    grid-template-columns: minmax(0, 1fr) 8ch 18ch;
   }
 }
 
@@ -1542,7 +1580,27 @@ body {
     0 4px 12px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Column titles stay in title case even if a utility asks for uppercase. */
+@media (max-width: 1023px) {
+  .toolbar-input,
+  .input-macos,
+  .login-bar-input {
+    font-size: 16px !important;
+  }
+}
+
+/* Beat Tailwind text size utilities so password and username share one line box. */
+.login-bar-input {
+  height: 3rem;
+  line-height: 3rem !important;
+  font-size: 16px !important;
+}
+
+@media (min-width: 640px) {
+  .login-bar-input {
+    height: 2.75rem;
+    line-height: 2.75rem !important;
+  }
+}
 .finder-table-header-cell,
 .finder-table-header-cell button,
 .sidebar-section-header,

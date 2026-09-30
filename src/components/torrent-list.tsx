@@ -16,7 +16,7 @@ function StatusCell({ torrent }: { torrent: Torrent }) {
   return (
     <span className="inline-flex items-center justify-start gap-1.5 text-muted-foreground" title={label}>
       <StatusIcon state={state} size={14} />
-      <span className="hidden xl:inline">{label}</span>
+      <span className="hidden lg:inline">{label}</span>
     </span>
   )
 }
