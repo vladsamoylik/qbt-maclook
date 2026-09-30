@@ -98,10 +98,10 @@ export function TorrentProvider({ children }: { children: React.ReactNode }) {
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc")
   const [showDetailPanel, setShowDetailPanel] = useState(false)
   const [isDesktop, setIsDesktop] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : true
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 768px)").matches : true
   )
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)")
+    const mq = window.matchMedia("(min-width: 768px)")
     const onChange = () => setIsDesktop(mq.matches)
     mq.addEventListener("change", onChange)
     return () => mq.removeEventListener("change", onChange)

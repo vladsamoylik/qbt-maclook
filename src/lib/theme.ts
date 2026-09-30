@@ -6,7 +6,7 @@
 const STORAGE_KEY = "qbt-applegui-theme"
 export type ThemeMode = "light" | "dark" | "system"
 
-const THEME_COLORS = { light: "#f2f2f2", dark: "#08090c" } as const
+const THEME_COLORS = { light: "#e7e7ec", dark: "#141416" } as const
 
 export function applyTheme(mode?: ThemeMode) {
   const effective = mode ?? (localStorage.getItem(STORAGE_KEY) as ThemeMode | null) ?? "system"

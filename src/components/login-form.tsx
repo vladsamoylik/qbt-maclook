@@ -64,7 +64,7 @@ export function LoginForm({ children }: { children: React.ReactNode }) {
 
   if (authed === null) {
     return (
-      <div className="flex h-full min-h-0 flex-1 items-center justify-center bg-card">
+      <div className="flex h-full min-h-0 flex-1 items-center justify-center">
         <span className="text-sm text-muted-foreground">...</span>
       </div>
     )
@@ -72,7 +72,7 @@ export function LoginForm({ children }: { children: React.ReactNode }) {
 
   if (!authed) {
     return (
-      <div className="flex h-full min-h-0 flex-1 flex-col items-center justify-center bg-card px-3 py-4 sm:px-4 sm:py-6">
+      <div className="flex h-full min-h-0 flex-1 flex-col items-center justify-center px-3 py-4 sm:px-4 sm:py-6">
         <form onSubmit={handleSubmit} className="login-form flex w-full max-w-md flex-col items-stretch gap-3 sm:gap-0">
           {/* Desktop: horizontal bar; Mobile: stacked */}
           <div className="login-bar flex w-full flex-col overflow-hidden sm:flex-row sm:items-center">

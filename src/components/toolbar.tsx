@@ -188,15 +188,15 @@ export function Toolbar({ onMenuClick }: ToolbarProps) {
         </div>
 
         {/* Search - desktop only (disabled on mobile) */}
-        <div className="ml-auto flex items-center gap-4">
-          <div className="relative hidden lg:block">
+        <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-4">
+          <div className="toolbar-search relative hidden min-w-[9.5rem] max-w-xs flex-1 lg:block">
             <WhiteSurIcon name="search" basePath="/icons/dashboard" size={13} className="absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search transfers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="toolbar-input h-10 w-48 pl-8 text-label focus-visible:ring-0 focus-visible:ring-offset-0 [&:focus]:outline-none"
+              className="toolbar-input h-10 w-full pl-8 text-label focus-visible:ring-0 focus-visible:ring-offset-0 [&:focus]:outline-none"
               aria-label="Search transfers"
             />
           </div>

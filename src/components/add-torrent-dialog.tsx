@@ -132,7 +132,7 @@ export function AddTorrentDialog({ open, onOpenChange }: AddTorrentDialogProps) 
           "!inset-0 !left-0 !top-0 !right-0 !bottom-0 !w-full !h-full !translate-x-0 !translate-y-0 !rounded-none",
           "pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
           /* Desktop: centered window with chrome */
-          "sm:!inset-auto sm:!left-1/2 sm:!top-1/2 sm:!right-auto sm:!bottom-auto sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:!w-[95vw] sm:!max-w-[520px] sm:!h-[90vh] sm:!max-h-[700px] sm:!rounded-[20px] sm:!p-0 sm:pt-0 sm:pb-0 sm:pl-0 sm:pr-0"
+          "sm:!inset-auto sm:!left-1/2 sm:!top-1/2 sm:!right-auto sm:!bottom-auto sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:!w-[95vw] sm:!max-w-[520px] sm:!h-[90vh] sm:!max-h-[700px] sm:!rounded-[var(--radius-sheet)] sm:!p-0 sm:pt-0 sm:pb-0 sm:pl-0 sm:pr-0"
         )}
       >
         <DialogTitle className="sr-only">Add Transfer</DialogTitle>
@@ -141,17 +141,17 @@ export function AddTorrentDialog({ open, onOpenChange }: AddTorrentDialogProps) 
 
           <div className="settings-group add-transfer-panel mb-3 sm:mb-4">
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "url" | "file")} className="flex flex-col">
-              <TabsList className="add-transfer-tabs w-full h-10 rounded-t-[14px] rounded-b-none border-b border-border/40 p-1 shadow-none">
+              <TabsList className="add-transfer-tabs w-full h-10 rounded-t-[var(--radius-section)] rounded-b-none border-b border-border/30 p-1 shadow-none">
               <TabsTrigger
                 value="url"
-                className="add-transfer-tab flex-1 rounded-[14px] px-4 text-label font-medium text-foreground data-[state=active]:bg-white data-[state=active]:text-[#56a1ff] data-[state=active]:shadow-sm dark:data-[state=active]:bg-[hsl(222,12%,11%)] dark:data-[state=active]:text-[#56a1ff]"
+                className="add-transfer-tab flex-1 rounded-[var(--radius-control)] px-4 text-label font-medium text-foreground"
               >
                 <WhiteSurIcon name="link-symbolic" size={11} className="mr-1.5 h-2.5 w-2.5" />
                 URL / Magnet
               </TabsTrigger>
               <TabsTrigger
                 value="file"
-                className="add-transfer-tab flex-1 rounded-[14px] px-4 text-label font-medium text-foreground data-[state=active]:bg-white data-[state=active]:text-[#56a1ff] data-[state=active]:shadow-sm dark:data-[state=active]:bg-[hsl(222,12%,11%)] dark:data-[state=active]:text-[#56a1ff]"
+                className="add-transfer-tab flex-1 rounded-[var(--radius-control)] px-4 text-label font-medium text-foreground"
               >
                 <WhiteSurIcon name="add-files-symbolic" size={11} className="mr-1.5 h-2.5 w-2.5" />
                 Torrent File
@@ -200,7 +200,7 @@ export function AddTorrentDialog({ open, onOpenChange }: AddTorrentDialogProps) 
                     }
                   }}
                   className={cn(
-                    "add-transfer-dropzone mt-1.5 flex flex-col items-center justify-center rounded-[18px] p-4 sm:p-8 text-center cursor-pointer transition-all min-h-[80px] sm:min-h-[140px]",
+                    "add-transfer-dropzone mt-1.5 flex flex-col items-center justify-center p-4 sm:p-8 text-center cursor-pointer transition-all min-h-[80px] sm:min-h-[140px]",
                     selectedFile && "add-transfer-dropzone-has-file",
                     isDragOver && "add-transfer-dropzone-dragover"
                   )}
@@ -261,7 +261,7 @@ export function AddTorrentDialog({ open, onOpenChange }: AddTorrentDialogProps) 
                   <SelectContent className="settings-select dropdown-menu-content !py-1.5 !px-4 w-full min-w-48 [&>button]:hidden">
                     <SelectItem
                       value={NO_CATEGORY_VALUE}
-                      className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm"
+                      className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm"
                     >
                       No category
                     </SelectItem>
@@ -271,7 +271,7 @@ export function AddTorrentDialog({ open, onOpenChange }: AddTorrentDialogProps) 
                         <SelectItem
                           key={cat.name}
                           value={cat.name}
-                          className="dropdown-menu-item rounded-[9px] px-3 py-1 text-body-sm"
+                          className="dropdown-menu-item rounded-[var(--radius-menu-item)] px-3 py-1 text-body-sm"
                         >
                           {cat.name}
                         </SelectItem>
@@ -297,29 +297,23 @@ export function AddTorrentDialog({ open, onOpenChange }: AddTorrentDialogProps) 
             <p className="mt-3 text-sm text-destructive">{error}</p>
           )}
 
-          <div className="mt-3 sm:mt-4 flex justify-end shrink-0">
-            <div className="toolbar-btn-group h-10" role="group">
-              <button
-                type="button"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-                className="flex h-full items-center px-4 text-label"
-              >
-                Cancel
-              </button>
-              <div
-                className="toolbar-btn-group-divider"
-                aria-hidden="true"
-              />
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={!canSubmit || isSubmitting}
-                className="flex h-full items-center px-4 text-label text-primary"
-              >
-                {isSubmitting ? "Adding..." : "Add Transfer"}
-              </button>
-            </div>
+          <div className="dialog-actions mt-3 sm:mt-4 shrink-0">
+            <button
+              type="button"
+              onClick={() => onOpenChange(false)}
+              disabled={isSubmitting}
+              className="glass-btn"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={!canSubmit || isSubmitting}
+              className="glass-btn glass-btn-prominent"
+            >
+              {isSubmitting ? "Adding..." : "Add Transfer"}
+            </button>
           </div>
         </div>
       </DialogContent>

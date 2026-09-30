@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils"
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start py-1">
-      <dt className="w-28 shrink-0 text-label text-muted-foreground">{label}</dt>
+      <dt className="w-32 shrink-0 whitespace-nowrap text-label text-muted-foreground">{label}</dt>
       <dd className="text-label text-foreground min-w-0">{children}</dd>
     </div>
   )
@@ -99,7 +99,7 @@ function GeneralTab() {
             ) : "\u2014"}
           </InfoRow>
           <InfoRow label="Hash">
-            <span className="font-mono text-caption text-muted-foreground select-all">{t.hash}</span>
+            <span className="break-all font-mono text-caption text-muted-foreground select-all">{t.hash}</span>
           </InfoRow>
         </dl>
       </div>
@@ -112,18 +112,18 @@ function FilesTab({ hash }: { hash: string }) {
   return (
     <TooltipProvider delayDuration={300}>
       <ScrollArea className="h-full">
-        <div className="p-4">
+        <div className="px-3 py-4">
           <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-files" role="grid">
             <div className="finder-table-header" role="row">
-              <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">#</div>
-              <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Name</div>
-              <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Size</div>
-              <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Progress</div>
+              <div className="finder-table-header-cell finder-cell-fit px-3 py-1.5 column-label">#</div>
+              <div className="finder-table-header-cell min-w-0 px-3 py-1.5 column-label">Name</div>
+              <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Size</div>
+              <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Progress</div>
             </div>
             <div className="finder-table-body">
               {files.map((file: TorrentFile) => (
                 <div key={file.index} className="finder-table-row text-body-sm">
-                  <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent tabular-nums text-muted-foreground">
+                  <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 align-middle tabular-nums text-muted-foreground">
                     {file.index}
                   </div>
                   <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent">
@@ -138,10 +138,10 @@ function FilesTab({ hash }: { hash: string }) {
                       </TooltipContent>
                     </Tooltip>
                   </div>
-                  <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums text-muted-foreground align-middle overflow-hidden">
+                  <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums text-muted-foreground align-middle">
                     {formatBytes(file.size)}
                   </div>
-                  <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                  <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums align-middle">
                     {(file.progress * 100).toFixed(0)}%
                   </div>
                 </div>
@@ -158,38 +158,38 @@ function PeersTab({ hash }: { hash: string }) {
   const { data: peers = [] } = useSWR<TorrentPeer[]>(hash ? `peers-${hash}` : null, () => fetchTorrentPeers(hash))
   return (
     <ScrollArea className="h-full">
-      <div className="p-4">
+      <div className="px-3 py-4">
         <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-peers" role="grid">
           <div className="finder-table-header" role="row">
-            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">IP</div>
-            <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Client</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Down</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Up</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Progress</div>
-            <div className="finder-table-header-cell px-3 py-2 text-center text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Type</div>
+            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 column-label">IP</div>
+            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 column-label">Client</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Down</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Up</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Progress</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-center column-label">Type</div>
           </div>
           <div className="finder-table-body">
             {peers.map((peer: TorrentPeer, i: number) => (
               <div key={i} className="finder-table-row text-body-sm">
-                <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent">
-                  <span className="flex items-center gap-1.5 font-mono text-caption">
+                <div role="gridcell" className="finder-table-cell min-w-0 overflow-hidden px-3 py-1 align-middle">
+                  <span className="flex min-w-0 items-center gap-1.5 font-mono text-caption">
                     <Users className="h-3 w-3 text-muted-foreground shrink-0" />
-                    <span className="truncate">{peer.ip}:{peer.port}</span>
+                    <span className="min-w-0 truncate">{peer.ip}:{peer.port}</span>
                   </span>
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent truncate text-muted-foreground">
-                  {peer.client}
+                <div role="gridcell" className="finder-table-cell min-w-0 overflow-hidden px-3 py-1 align-middle text-muted-foreground">
+                  <span className="block min-w-0 truncate">{peer.client}</span>
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums text-primary align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums text-primary align-middle">
                   {formatSpeed(peer.dl_speed)}
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums text-success align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums text-success align-middle">
                   {formatSpeed(peer.up_speed)}
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums align-middle">
                   {(peer.progress * 100).toFixed(0)}%
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 text-center align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-center align-middle">
                   <span className="rounded-sm bg-secondary px-1.5 py-0.5 text-caption-xs font-medium text-secondary-foreground">
                     {peer.connection}
                   </span>
@@ -207,37 +207,37 @@ function TrackersTab({ hash }: { hash: string }) {
   const { data: trackers = [] } = useSWR<TorrentTracker[]>(hash ? `trackers-${hash}` : null, () => fetchTorrentTrackers(hash))
   return (
     <ScrollArea className="h-full">
-      <div className="p-4">
+      <div className="px-3 py-4">
         <div className="finder-table finder-table-scroll-content finder-table-grid finder-table-detail-trackers" role="grid">
           <div className="finder-table-header" role="row">
-            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">URL</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Seeds</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Peers</div>
-            <div className="finder-table-header-cell px-3 py-2 text-right text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Leeches</div>
-            <div className="finder-table-header-cell px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Status</div>
+            <div className="finder-table-header-cell min-w-0 px-3 py-1.5 column-label">URL</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Seeds</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Peers</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-2 text-right column-label">Leeches</div>
+            <div className="finder-table-header-cell finder-cell-fit px-3 py-1.5 column-label">Status</div>
           </div>
           <div className="finder-table-body">
             {trackers.map((tracker: TorrentTracker, i: number) => (
               <div key={i} className="finder-table-row text-body-sm">
-                <div role="gridcell" className="finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent">
-                  <span className="flex items-center gap-1.5 font-mono text-caption">
+                <div role="gridcell" className="finder-table-cell min-w-0 overflow-hidden px-3 py-1 align-middle">
+                  <span className="flex min-w-0 items-center gap-1.5 font-mono text-caption">
                     <WhiteSurIcon name="link-symbolic" size={10} className="h-2.5 w-2.5 text-muted-foreground shrink-0" />
-                    <span className="truncate">{tracker.url}</span>
+                    <span className="min-w-0 truncate">{tracker.url}</span>
                   </span>
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums align-middle">
                   {tracker.num_seeds}
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums align-middle">
                   {tracker.num_peers}
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 text-right tabular-nums align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 text-right tabular-nums align-middle">
                   {tracker.num_leeches}
                 </div>
-                <div role="gridcell" className="finder-table-cell px-3 py-1 align-middle overflow-hidden">
+                <div role="gridcell" className="finder-table-cell finder-cell-fit px-3 py-1 align-middle">
                   <span className="flex items-center gap-1.5">
                     <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", tracker.status === 2 ? "bg-success" : "bg-warning")} />
-                    <span className="truncate text-muted-foreground">{tracker.msg}</span>
+                    <span className="whitespace-nowrap text-muted-foreground">{tracker.msg}</span>
                   </span>
                 </div>
               </div>
@@ -273,18 +273,18 @@ export function DetailPanel() {
         </div>
       )}
       <Tabs defaultValue="general" className="flex flex-1 flex-col overflow-hidden">
-        <div className="finder-table-header px-4">
-          <TabsList className="h-9 bg-transparent p-0 gap-0">
-            <TabsTrigger value="general" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+        <div className="inspector-tabbar">
+          <TabsList className="inspector-tabs">
+            <TabsTrigger value="general" className="inspector-tab">
               General
             </TabsTrigger>
-            <TabsTrigger value="files" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+            <TabsTrigger value="files" className="inspector-tab">
               Files
             </TabsTrigger>
-            <TabsTrigger value="peers" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+            <TabsTrigger value="peers" className="inspector-tab">
               Peers
             </TabsTrigger>
-            <TabsTrigger value="trackers" className="rounded-none border-b-2 border-transparent px-3 pb-2.5 pt-2 text-caption-xs font-semibold uppercase tracking-wider text-muted-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+            <TabsTrigger value="trackers" className="inspector-tab">
               Trackers
             </TabsTrigger>
           </TabsList>

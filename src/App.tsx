@@ -25,7 +25,7 @@ async function checkLoggedIn(): Promise<boolean> {
 
 function LoadingScreen() {
   return (
-    <div className="flex h-full min-h-0 flex-1 items-center justify-center bg-card">
+    <div className="flex h-full min-h-0 flex-1 items-center justify-center">
       <span className="text-sm text-muted-foreground">...</span>
     </div>
   )
@@ -68,7 +68,7 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col items-center justify-center bg-card px-3 py-4 sm:px-4 sm:py-6">
+    <div className="flex h-full min-h-0 flex-1 flex-col items-center justify-center px-3 py-4 sm:px-4 sm:py-6">
       <form
         onSubmit={handleSubmit}
         className="login-form flex w-full max-w-md flex-col items-stretch gap-3 sm:gap-0"
@@ -122,7 +122,7 @@ function AppLayout() {
     <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden">
       <ApiErrorBanner />
       <div className="flex min-h-0 flex-1 min-w-0 flex-col px-3">
-        <header className="flex min-w-0 shrink-0 items-center bg-card pb-6 pt-3">
+        <header className="window-toolbar flex min-w-0 shrink-0 items-center pb-4 pt-3">
           <Toolbar onMenuClick={undefined} />
         </header>
         <main className="flex flex-1 flex-col min-h-0">

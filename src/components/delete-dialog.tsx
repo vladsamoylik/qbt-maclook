@@ -43,7 +43,7 @@ export function DeleteDialog({
           "!inset-0 !left-0 !top-0 !right-0 !bottom-0 !w-full !h-full !translate-x-0 !translate-y-0 !rounded-none",
           "pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
           /* Desktop: centered window with chrome */
-          "sm:!inset-auto sm:!left-1/2 sm:!top-1/2 sm:!right-auto sm:!bottom-auto sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:!w-[95vw] sm:!max-w-[440px] sm:!h-auto sm:!max-h-[min(90dvh,600px)] sm:!rounded-[20px] sm:!p-0 sm:pt-0 sm:pb-0 sm:pl-0 sm:pr-0"
+          "sm:!inset-auto sm:!left-1/2 sm:!top-1/2 sm:!right-auto sm:!bottom-auto sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:!w-[95vw] sm:!max-w-[440px] sm:!h-auto sm:!max-h-[min(90dvh,600px)] sm:!rounded-[var(--radius-sheet)] sm:!p-0 sm:pt-0 sm:pb-0 sm:pl-0 sm:pr-0"
         )}
       >
         <DialogTitle className="sr-only">Remove Transfer</DialogTitle>
@@ -89,29 +89,23 @@ export function DeleteDialog({
             </SettingsRow>
           </div>
 
-          <div className="mt-5 flex justify-end">
-            <div className="toolbar-btn-group h-10" role="group">
-              <button
-                type="button"
-                onClick={() => onOpenChange(false)}
-                disabled={isDeleting}
-                className="flex h-full items-center px-4 text-label"
-              >
-                Cancel
-              </button>
-              <div
-                className="toolbar-btn-group-divider"
-                aria-hidden="true"
-              />
-              <button
-                type="button"
-                onClick={handleConfirm}
-                disabled={isDeleting || torrents.length === 0}
-                className="flex h-full items-center px-4 text-label text-destructive"
-              >
-                {isDeleting ? "Removing..." : "Remove"}
-              </button>
-            </div>
+          <div className="dialog-actions mt-5">
+            <button
+              type="button"
+              onClick={() => onOpenChange(false)}
+              disabled={isDeleting}
+              className="glass-btn"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirm}
+              disabled={isDeleting || torrents.length === 0}
+              className="glass-btn glass-btn-destructive"
+            >
+              {isDeleting ? "Removing..." : "Remove"}
+            </button>
           </div>
         </div>
       </DialogContent>
