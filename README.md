@@ -26,7 +26,7 @@ This theme was created because there were no simple, lightweight alternative the
 
 ## Installation
 
-1. Build and deploy the theme:
+1. Build and deploy the theme (Node.js 18.19 or newer):
    ```bash
    cd ~/qbt-applegui
    npm install

@@ -652,13 +652,14 @@ body {
 }
 
 .finder-table-header .finder-table-header-cell {
-  height: 2.125rem;
-  max-height: 2.125rem;
+  min-height: 2.125rem;
+  height: auto;
   box-sizing: border-box;
   font-size: 0.75rem;
   font-weight: 590;
   letter-spacing: -0.011em;
   text-transform: none;
+  white-space: nowrap;
 }
 
 .dark .finder-table-header {
@@ -690,19 +691,15 @@ body {
   box-sizing: border-box;
 }
 
-/* Grid layout - use subgrid so header and row columns align exactly */
+/* Grid layout - use subgrid so header and row columns align exactly.
+   Value tracks are max-content so headers and formatted numbers are never clipped.
+   The name track shrinks and ellipsizes. */
 .finder-table-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 5ch;
+  grid-template-columns: minmax(8rem, 1fr) max-content;
   grid-auto-rows: auto;
   width: 100%;
-  min-width: 0;
-}
-
-@media (min-width: 1280px) {
-  .finder-table-grid {
-    min-width: 640px;
-  }
+  min-width: min-content;
 }
 
 /* Mobile: 2 cols. Header and rows inherit via subgrid. */
@@ -729,28 +726,73 @@ body {
 /* lg: name, progress, status */
 @media (min-width: 1024px) {
   .finder-table-grid {
-    grid-template-columns: minmax(0, 1fr) 8ch 18ch;
+    grid-template-columns: minmax(8rem, 1fr) max-content max-content;
   }
 }
 
-/* xl: 9 columns */
+/* xl: name, size, progress, status, seeds, peers, down, up, eta */
 @media (min-width: 1280px) {
   .finder-table-grid {
-    grid-template-columns: minmax(0, 1fr) 11ch 14ch 18ch 6ch 6ch 14ch 14ch 8ch;
+    grid-template-columns:
+      minmax(10rem, 1fr)
+      max-content
+      max-content
+      max-content
+      max-content
+      max-content
+      max-content
+      max-content
+      max-content;
   }
 }
 
-/* Detail panel tables: fixed column configs */
+/* Detail tables stay inside the inspector. Names, URLs, and addresses ellipsize.
+   Counts, speeds, and status stay max-content so those strings are never cut. */
+.detail-panel-surface .finder-table-detail-files.finder-table-grid,
+.detail-panel-surface .finder-table-detail-peers.finder-table-grid,
+.detail-panel-surface .finder-table-detail-trackers.finder-table-grid {
+  width: 100%;
+  min-width: 0;
+}
+
+.detail-panel-surface .finder-table-scroll-content {
+  padding-right: 0;
+}
+
+.detail-panel-surface .finder-table-header-cell,
+.detail-panel-surface .finder-table-row .finder-table-cell {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+@media (max-width: 359px) {
+  .detail-panel-surface .finder-table-header-cell,
+  .detail-panel-surface .finder-table-row .finder-table-cell {
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+
+  .detail-panel-surface .finder-table-row .finder-table-cell {
+    font-size: 0.8125rem;
+  }
+}
+
 .detail-panel-surface .finder-table-detail-files.finder-table-grid {
-  grid-template-columns: 3rem minmax(0, 1fr) 6rem 5rem;
+  grid-template-columns: max-content minmax(0, 1fr) max-content max-content;
 }
 
 .detail-panel-surface .finder-table-detail-peers.finder-table-grid {
-  grid-template-columns: minmax(0, 1fr) 6rem 5rem 5rem 4rem 5rem;
+  grid-template-columns: minmax(2rem, 1fr) minmax(3.6rem, 1fr) max-content max-content max-content max-content;
 }
 
 .detail-panel-surface .finder-table-detail-trackers.finder-table-grid {
-  grid-template-columns: minmax(0, 1fr) 4rem 4rem 4rem 6rem;
+  grid-template-columns: minmax(3rem, 1fr) max-content max-content max-content max-content;
+}
+
+@media (max-width: 359px) {
+  .detail-panel-surface .finder-table-detail-peers.finder-table-grid {
+    grid-template-columns: minmax(1.5rem, 1fr) minmax(2.8rem, 1fr) max-content max-content max-content max-content;
+  }
 }
 
 /* Detail table row rounding: last cell gets right radius (override main nth-child rules) */
@@ -773,16 +815,30 @@ body {
   gap: 1px;
 }
 
-/* Fixed row height - use height for reliable layout */
+/* Rows grow when a name has a category subtitle. Value cells opt out of clipping. */
 .finder-table-row .finder-table-cell {
   display: flex;
   align-items: center;
   min-height: 2.625rem;
-  height: 2.625rem;
+  height: auto;
   font-size: 0.9375rem;
-  line-height: 1.45;
+  line-height: 1.35;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+.finder-table-header-cell.finder-cell-fit,
+.finder-table-row .finder-table-cell.finder-cell-fit {
+  width: auto;
+  max-width: none;
+  min-width: max-content;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.finder-table-row .finder-table-cell.finder-cell-fit > * {
+  flex-shrink: 0;
+  min-width: max-content;
 }
 
 /* Override: hidden cells must stay hidden (base rule above has higher specificity than Tailwind .hidden) */

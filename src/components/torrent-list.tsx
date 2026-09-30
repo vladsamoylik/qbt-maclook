@@ -53,7 +53,7 @@ function SortableHeader({
         )}
         aria-sort={isActive ? (sortDirection === "asc" ? "ascending" : "descending") : undefined}
       >
-        <span>{label}</span>
+        <span className="whitespace-nowrap">{label}</span>
         <span
           className={cn("shrink-0 w-3 text-center", isActive ? "text-foreground" : "invisible")}
           aria-hidden
@@ -178,7 +178,7 @@ export function TorrentList() {
                 <SortableHeader
                   field="size"
                   label="Size"
-                  className="hidden w-[11ch] min-w-[11ch] max-w-[11ch] px-3 xl:table-cell justify-end whitespace-nowrap"
+                  className="finder-cell-fit hidden px-3 xl:table-cell justify-end whitespace-nowrap"
                   align="right"
                   sortField={sortField}
                   sortDirection={sortDirection}
@@ -187,7 +187,7 @@ export function TorrentList() {
                 <SortableHeader
                   field="progress"
                   label="Progress"
-                  className="w-[5ch] min-w-[5ch] max-w-[5ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] pl-2 pr-3 justify-center whitespace-nowrap"
+                  className="finder-cell-fit pl-2 pr-3 justify-center whitespace-nowrap"
                   align="center"
                   sortField={sortField}
                   sortDirection={sortDirection}
@@ -196,7 +196,7 @@ export function TorrentList() {
                 <SortableHeader
                   field="state"
                   label="Status"
-                  className="hidden w-[18ch] min-w-[18ch] max-w-[18ch] px-3 justify-start whitespace-nowrap lg:table-cell"
+                  className="finder-cell-fit hidden px-3 justify-start whitespace-nowrap lg:table-cell"
                   align="left"
                   sortField={sortField}
                   sortDirection={sortDirection}
@@ -205,7 +205,7 @@ export function TorrentList() {
                 <SortableHeader
                   field="num_seeds"
                   label="Seeds"
-                  className="hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 xl:table-cell justify-start whitespace-nowrap"
+                  className="finder-cell-fit hidden px-3 xl:table-cell justify-start whitespace-nowrap"
                   align="left"
                   sortField={sortField}
                   sortDirection={sortDirection}
@@ -214,7 +214,7 @@ export function TorrentList() {
                 <SortableHeader
                   field="num_leechs"
                   label="Peers"
-                  className="hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 xl:table-cell justify-start whitespace-nowrap"
+                  className="finder-cell-fit hidden px-3 xl:table-cell justify-start whitespace-nowrap"
                   align="left"
                   sortField={sortField}
                   sortDirection={sortDirection}
@@ -223,7 +223,7 @@ export function TorrentList() {
                 <SortableHeader
                   field="dlspeed"
                   label="Down"
-                  className="hidden w-[14ch] min-w-[14ch] max-w-[14ch] px-3 xl:table-cell justify-start whitespace-nowrap"
+                  className="finder-cell-fit hidden px-3 xl:table-cell justify-start whitespace-nowrap"
             align="left"
             sortField={sortField}
             sortDirection={sortDirection}
@@ -232,7 +232,7 @@ export function TorrentList() {
           <SortableHeader
             field="upspeed"
             label="Up"
-            className="hidden w-[14ch] min-w-[14ch] max-w-[14ch] px-3 xl:table-cell justify-start whitespace-nowrap"
+            className="finder-cell-fit hidden px-3 xl:table-cell justify-start whitespace-nowrap"
             align="left"
             sortField={sortField}
             sortDirection={sortDirection}
@@ -241,7 +241,7 @@ export function TorrentList() {
           <SortableHeader
             field="eta"
             label="ETA"
-            className="hidden w-[8ch] min-w-[8ch] max-w-[8ch] px-3 xl:table-cell justify-start whitespace-nowrap"
+            className="finder-cell-fit hidden px-3 xl:table-cell justify-start whitespace-nowrap"
             align="left"
                   sortField={sortField}
                   sortDirection={sortDirection}
@@ -281,37 +281,37 @@ export function TorrentList() {
                         </div>
                       </div>
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[11ch] min-w-[11ch] max-w-[11ch] px-3 py-1 text-right tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit hidden px-3 py-1 text-right tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {formatBytes(torrent.size)}
                     </div>
-                    <div role="gridcell" className="finder-table-cell w-[5ch] min-w-[5ch] max-w-[5ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] px-2 py-1 align-middle">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit px-2 py-1 align-middle">
                       {/* Mobile: percent only */}
                       <span className="text-caption tabular-nums text-muted-foreground xl:hidden">
                         {(torrent.progress * 100).toFixed(0)}%
                       </span>
                       {/* Desktop: progress bar + percent */}
                       <div className="hidden xl:flex items-center gap-1.5">
-                        <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
+                        <div className="h-1.5 min-w-16 flex-1 rounded-full bg-secondary overflow-hidden">
                           <div
                             className={cn("h-full rounded-full transition-all", getProgressColor(torrent.progress, torrent.state))}
                             style={{ width: `${Math.min(torrent.progress * 100, 100)}%` }}
                           />
                         </div>
-                        <span className="text-caption tabular-nums text-muted-foreground w-8 text-right shrink-0">
+                        <span className="shrink-0 whitespace-nowrap text-right text-caption tabular-nums text-muted-foreground">
                           {(torrent.progress * 100).toFixed(0)}%
                         </span>
                       </div>
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[18ch] min-w-[18ch] max-w-[18ch] px-3 py-1 text-left whitespace-nowrap align-middle lg:block">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit hidden px-3 py-1 text-left whitespace-nowrap align-middle lg:block">
                       <StatusCell torrent={torrent} />
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit hidden px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {torrent.num_seeds}
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit hidden px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {torrent.num_leechs}
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[14ch] min-w-[14ch] max-w-[14ch] h-5 px-3 py-1 text-left tabular-nums align-middle xl:block">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit hidden px-3 py-1 text-left tabular-nums align-middle xl:block">
                       {torrent.dlspeed > 0 ? (
                         <span className="flex items-center gap-1 whitespace-nowrap text-primary">
                           <WhiteSurIcon name="download-symbolic" size={10} className="h-2.5 w-2.5 shrink-0" />
@@ -321,7 +321,7 @@ export function TorrentList() {
                         <span className="text-muted-foreground/40">{"\u2014"}</span>
                       )}
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[14ch] min-w-[14ch] max-w-[14ch] h-5 px-3 py-1 text-left tabular-nums align-middle xl:block">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit hidden px-3 py-1 text-left tabular-nums align-middle xl:block">
                       {torrent.upspeed > 0 ? (
                         <span className="flex items-center gap-1 whitespace-nowrap text-success">
                           <WhiteSurIcon name="upload-symbolic" size={10} className="h-2.5 w-2.5 shrink-0" />
@@ -331,7 +331,7 @@ export function TorrentList() {
                         <span className="text-muted-foreground/40">{"\u2014"}</span>
                       )}
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[8ch] min-w-[8ch] max-w-[8ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
+                    <div role="gridcell" className="finder-table-cell finder-cell-fit hidden px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
                       {torrent.progress >= 1 ? "\u2014" : formatETA(torrent.eta)}
                     </div>
                   </div>
