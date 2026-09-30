@@ -99,7 +99,7 @@ function GeneralTab() {
             ) : "\u2014"}
           </InfoRow>
           <InfoRow label="Hash">
-            <span className="font-mono text-caption text-muted-foreground select-all">{t.hash}</span>
+            <span className="break-all font-mono text-caption text-muted-foreground select-all">{t.hash}</span>
           </InfoRow>
         </dl>
       </div>

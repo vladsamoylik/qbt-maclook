@@ -698,7 +698,7 @@ body {
 /* xl: 9 columns */
 @media (min-width: 1280px) {
   .finder-table-grid {
-    grid-template-columns: minmax(0, 1fr) 11ch 14ch 14ch 6ch 6ch 14ch 14ch 8ch;
+    grid-template-columns: minmax(0, 1fr) 11ch 14ch 18ch 6ch 6ch 14ch 14ch 8ch;
   }
 }
 

@@ -196,7 +196,7 @@ export function TorrentList() {
                 <SortableHeader
                   field="state"
                   label="Status"
-                  className="hidden w-[18ch] min-w-[18ch] max-w-[18ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] px-3 justify-start whitespace-nowrap lg:table-cell"
+                  className="hidden w-[18ch] min-w-[18ch] max-w-[18ch] px-3 justify-start whitespace-nowrap lg:table-cell"
                   align="left"
                   sortField={sortField}
                   sortDirection={sortDirection}
@@ -271,7 +271,7 @@ export function TorrentList() {
                       isSelected && "finder-table-row-selected"
                     )}
                   >
-                    <div role="gridcell" className={cn("finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2", isSelected ? "border-l-[#0064e1]" : "border-l-transparent")}>
+                    <div role="gridcell" className={cn("finder-table-cell min-w-0 px-3 py-1 align-middle overflow-hidden border-l-2 border-l-transparent")}>
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="min-w-0">
                           <p className="truncate font-medium text-foreground">{torrent.name}</p>
@@ -302,7 +302,7 @@ export function TorrentList() {
                         </span>
                       </div>
                     </div>
-                    <div role="gridcell" className="finder-table-cell hidden w-[18ch] min-w-[18ch] max-w-[18ch] xl:w-[14ch] xl:min-w-[14ch] xl:max-w-[14ch] px-3 py-1 text-left whitespace-nowrap align-middle lg:block">
+                    <div role="gridcell" className="finder-table-cell hidden w-[18ch] min-w-[18ch] max-w-[18ch] px-3 py-1 text-left whitespace-nowrap align-middle lg:block">
                       <StatusCell torrent={torrent} />
                     </div>
                     <div role="gridcell" className="finder-table-cell hidden w-[6ch] min-w-[6ch] max-w-[6ch] px-3 py-1 text-left tabular-nums text-muted-foreground whitespace-nowrap align-middle xl:block">
